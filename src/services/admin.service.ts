@@ -20,6 +20,10 @@ export const addCustomer = async (data:any) => {
     const result = await apiClient.post("/api/create-customer",data);
     return result.data;
 }
+export const ocrImage = async (data:any) => {
+    const result = await apiClient.post("/api/ocr-image",data);
+    return result.data;
+}
 
 // put
 export const updateCustomer = async (data:any) => {

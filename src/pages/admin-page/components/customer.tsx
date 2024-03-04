@@ -3,6 +3,7 @@ import {
   useAddUser,
   useDeleteUser,
   useUpdateUser,
+  useOcrImage,
 } from "../admin.loader";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import {
@@ -17,10 +18,8 @@ import {
   Image,
   DatePicker,
   Select,
-  message,
 } from "antd";
-import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 
 export const Customer = () => {
@@ -37,8 +36,30 @@ export const Customer = () => {
   const { mutate: mutateAddUser } = useAddUser();
   const { mutate: mutateUpdateUser } = useUpdateUser();
   const { mutate: mutateDeleteUser } = useDeleteUser();
+  const {
+    mutate: mutateOcrImage,
+    data: dataOcrImage,
+    isLoading: isLoadingOcrImage,
+  } = useOcrImage();
   const [form] = Form.useForm();
   const [formCccc] = Form.useForm();
+  //
+  useEffect(() => {
+    form.setFieldsValue({
+      cccd: dataOcrImage?.data?.data?.front?.fields?.id_number,
+      fullname: dataOcrImage?.data?.data?.front?.fields?.name,
+      date_of_birth:
+        dataOcrImage?.data?.data?.front?.fields?.birthday != undefined
+          ? dayjs(
+              dataOcrImage?.data?.data?.front?.fields?.birthday,
+              "DD/MM/YYYY"
+            )
+          : null,
+      gender: dataOcrImage?.data?.data?.front?.fields?.gender,
+      address: dataOcrImage?.data?.data?.front?.fields?.home,
+    });
+  }, [dataOcrImage]);
+
   const showModal = () => {
     setOptionModal("Add");
     setVisible(true);
@@ -52,7 +73,6 @@ export const Customer = () => {
     formCccc.resetFields();
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalWait, setIsModalWait] = useState(false);
   const [userSelected, setUserSelected] = useState();
   const handleOkDelete = () => {
     mutateDeleteUser(idSelected);
@@ -64,7 +84,7 @@ export const Customer = () => {
   };
   const columns = [
     {
-      title: "Fullname",
+      title: "Họ và tên",
       dataIndex: "fullname",
       width: 300,
     },
@@ -104,7 +124,7 @@ export const Customer = () => {
       width: 200,
     },
     {
-      title: "Active",
+      title: "Hoạt động",
       dataIndex: "active",
       width: 200,
       render: (_: any, data: any) => {
@@ -384,7 +404,7 @@ export const Customer = () => {
         />
       </Modal>
       <Modal
-        open={isModalWait}
+        open={isLoadingOcrImage}
         footer={null}
         closable={false}
         centered
@@ -420,44 +440,14 @@ export const Customer = () => {
   }
   function handleOCR() {
     setModalCccd(false);
-    setIsModalWait(true);
     var bodyFormData = new FormData();
     bodyFormData.append("image_front", imageFileFront || "");
     bodyFormData.append("image_back", imageFileBack || "");
-    axios
-      .post("https://ekyc-api.kalapa.vn/api/ocr/vn-idcard", bodyFormData, {
-        headers: {
-          Authorization:
-            "5bb42ea331ee010001a0b7d76197832111936w5vrt00d5uqgo1lq175",
-        },
-      })
-      .then((res) => {
-        if (res.data.data.front.fields.id_number !== "") {
-          message.success("Nhận dạng thành công");
-          form.setFieldsValue({
-            cccd: res.data.data.front?.fields?.id_number,
-            fullname: res.data.data.front?.fields?.name,
-            date_of_birth: dayjs(
-              res.data.data.front?.fields?.birthday,
-              "DD/MM/YYYY"
-            ),
-            gender: res.data.data.front?.fields?.gender,
-            address: res.data.data.front?.fields?.home,
-          });
-        } else {
-          message.error("Nhận dạng thất bại");
-        }
-        setIsModalWait(false);
-      })
-      .catch(() => {
-        setIsModalWait(false);
-        message.error("Nhận dạng thất bại");
-      });
+    mutateOcrImage(bodyFormData);
   }
   function formatDate(inputDate: any) {
     // Chuyển chuỗi thành đối tượng Date
     var dateObject = new Date(inputDate);
-
     // Lấy ngày, tháng và năm
     var day = dateObject.getDate();
     var month = dateObject.getMonth() + 1; // Tháng bắt đầu từ 0 nên phải cộng thêm 1

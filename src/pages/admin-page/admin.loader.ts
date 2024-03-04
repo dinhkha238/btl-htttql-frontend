@@ -1,6 +1,6 @@
 import { message } from "antd";
 import { useQueryClient, useMutation, useQuery } from "react-query";
-import { addCustomer, deleteCustomer, getCustomers, updateCustomer } from "../../services/admin.service";
+import { addCustomer, deleteCustomer, getCustomers, ocrImage, updateCustomer } from "../../services/admin.service";
 
 export const CACHE_KEYS = {
     InforCustomer: "INFOR_CUSTOMER",
@@ -55,6 +55,20 @@ export const useAddUser = () => {
       },
       onError:() => {
         message.error("Delete customer failed")
+      }
+    }
+    )
+  }
+  export const useOcrImage = () => {
+    return useMutation((data: any) => {
+      return ocrImage(data)
+    },
+    {
+      onSuccess:() => {
+        message.success("Nhận dạng thành công")
+      },
+      onError:() => {
+        message.error("Nhận dạng thất bại")
       }
     }
     )
