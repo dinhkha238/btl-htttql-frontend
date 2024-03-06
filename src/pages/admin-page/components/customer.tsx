@@ -141,8 +141,10 @@ export const Customer = () => {
           setOptionModal("Edit");
           setVisible(true);
           setIdSelected(data.id);
-          data.date_of_birth = dayjs(data.date_of_birth, "DD/MM/YYYY");
-          form.setFieldsValue(data);
+          form.setFieldsValue({
+            ...data,
+            date_of_birth: dayjs(data.date_of_birth, "DD/MM/YYYY"),
+          });
         }
         function handleDelete() {
           setIsModalOpen(true);
@@ -170,6 +172,7 @@ export const Customer = () => {
       form
         .validateFields()
         .then((values) => {
+          values.date_of_birth = formatDate(values?.date_of_birth);
           var a = { ...values, _id: idSelected };
           mutateUpdateUser(a);
           form.resetFields();

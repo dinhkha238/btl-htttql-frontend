@@ -15,7 +15,7 @@ export const Admin = () => {
     <>
       {isAuthenticated == "true" ? (
         <Row>
-          <Col span={4}>
+          <Col xl={4} xxl={3}>
             <Layout
               style={{
                 minHeight: "100vh",
@@ -36,7 +36,9 @@ export const Admin = () => {
               </Sider>
             </Layout>
           </Col>
-          <Col span={20}>{selectedMenu === "users" && <Customer />}</Col>
+          <Col xl={20} xxl={21}>
+            {selectedMenu === "users" && <Customer />}
+          </Col>
         </Row>
       ) : (
         <Navigate to="/login-admin" />
