@@ -20,8 +20,12 @@ export const useAddUser = () => {
         queryClient.invalidateQueries(CACHE_KEYS.InforCustomers);
         message.success("Add customer success")
       },
-      onError:() => {
-        message.error("Add customer failed")
+      onError:(data:any) => {
+        if(data?.response?.status === 409){ // 409 Conflict
+          message.error("Customer already exists")}
+        else {
+          message.error("Add customer failed")
+        }
       }
     }
     )

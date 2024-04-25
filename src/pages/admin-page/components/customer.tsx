@@ -21,6 +21,7 @@ import {
 } from "antd";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
+import { Wheel } from "./wheel";
 
 export const Customer = () => {
   const { data: dataCustomers } = useCustomers();
@@ -32,8 +33,9 @@ export const Customer = () => {
   const [imageFileBack, setImageFileBack] = useState("");
   const [imageDataFront, setImageDataFront] = useState(null);
   const [imageDataBack, setImageDataBack] = useState(null);
+  const [openWheel, setOpenWheel] = useState(false);
 
-  const { mutate: mutateAddUser } = useAddUser();
+  const { mutate: mutateAddUser, isSuccess: isSuccessAddUser } = useAddUser();
   const { mutate: mutateUpdateUser } = useUpdateUser();
   const { mutate: mutateDeleteUser } = useDeleteUser();
   const {
@@ -43,6 +45,16 @@ export const Customer = () => {
   } = useOcrImage();
   const [form] = Form.useForm();
   const [formCccc] = Form.useForm();
+
+  //
+  useEffect(() => {
+    if (isSuccessAddUser) {
+      setOpenWheel(true);
+      form.resetFields();
+      setVisible(false);
+    }
+  }, [isSuccessAddUser]);
+
   //
   useEffect(() => {
     form.setFieldsValue({
@@ -162,8 +174,6 @@ export const Customer = () => {
         .then((values) => {
           values.date_of_birth = formatDate(values?.date_of_birth);
           mutateAddUser(values);
-          form.resetFields();
-          setVisible(false);
         })
         .catch((errorInfo) => {
           console.log("Validation failed:", errorInfo);
@@ -414,6 +424,15 @@ export const Customer = () => {
         width={250}
       >
         <h4>Đang xử lý, vui lòng chờ trong giây lát ...</h4>
+      </Modal>
+      <Modal
+        open={openWheel}
+        footer={null}
+        closable={false}
+        onCancel={() => setOpenWheel(false)}
+        width={"60%"}
+      >
+        <Wheel />
       </Modal>
     </div>
   );
