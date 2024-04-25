@@ -3,6 +3,7 @@ import { Layout, Menu, Row, Col } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { Customer } from "../components/customer";
 import { Navigate, useNavigate } from "react-router-dom";
+import { Wheel } from "../components/wheel";
 
 export const Admin = () => {
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ export const Admin = () => {
                   onClick={handleMenuClick} //Gọi hàm xử lý khi click vào mục SideNav
                 >
                   <Menu.Item key="users">Quản lý khách hàng</Menu.Item>
+                  <Menu.Item key="lucky-wheel">Vòng quay may mắn</Menu.Item>
                   <Menu.Item onClick={handleLogout}>Đăng xuất</Menu.Item>
                 </Menu>
               </Sider>
@@ -38,6 +40,7 @@ export const Admin = () => {
           </Col>
           <Col xl={20} xxl={21}>
             {selectedMenu === "users" && <Customer />}
+            {selectedMenu === "lucky-wheel" && <Wheel />}
           </Col>
         </Row>
       ) : (

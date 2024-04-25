@@ -200,7 +200,7 @@ export const Customer = () => {
     <div>
       <Row justify={"space-between"}>
         <Col>
-          <h2>DANH SÁCH KHÁCH HÀNG</h2>
+          <h2 style={{ margin: "20px 0" }}>DANH SÁCH KHÁCH HÀNG</h2>
         </Col>
         <Col>
           <Button type="primary" onClick={showModal} style={{ margin: 20 }}>
