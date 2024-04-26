@@ -2,19 +2,20 @@ import { useState } from "react";
 import "./wheel.css";
 import { Row, Col } from "antd";
 const listGift = [
-  { text: "MÁY PHÁT ĐIỆN", percent: 0 / 100 },
-  { text: "1 TRIỆU", percent: 12 / 100 },
-  { text: "500K", percent: 42 / 100 },
-  { text: "XE ĐIỆN 7.999K", percent: 0 / 100 },
-  { text: "300K", percent: 22 / 100 },
-  { text: "QUẠT CÂY", percent: 12 / 100 },
-  { text: "XE ĐIỆN 14.999K", percent: 0 / 100 },
-  { text: "NỒI CHIÊN", percent: 10 / 100 },
+  { text: "MÁY PHÁT ĐIỆN 8,5 TRIỆU", percent: 0 / 100 },
+  { text: "QUẠT CÂY", percent: 25 / 100 },
+  { text: "NỒI CƠM ĐIỆN", percent: 14 / 100 },
+  { text: "XE ĐIỆN 8 TRIỆU", percent: 0 / 100 },
+  { text: "NỒI CHIÊN KHÔNG DẦU", percent: 10 / 100 },
+  { text: "BỘ NỒI INOX", percent: 35 / 100 },
+  { text: "ẤM SIÊU TỐC", percent: 15 / 100 },
 ];
 
-export const Wheel = () => {
+interface WheelProps {
+  indexCustomer: number;
+}
+export const Wheel: React.FC<WheelProps> = ({ indexCustomer }) => {
   const [isRotating, setIsRotating] = useState(false);
-  const [spinCount, setSpinCount] = useState(0);
   const [currentRotate, setCurrentRotate] = useState(0);
   const [showMsg, setShowMsg] = useState("");
 
@@ -27,15 +28,23 @@ export const Wheel = () => {
       const random = Math.random();
       let gift;
       let rotateValue = currentRotate;
-      let countValue = spinCount;
-      setSpinCount((prevCount) => prevCount + 1);
-      countValue += 1;
-      if (countValue === 2) {
-        gift = { ...listGift[0], index: 0 };
-      } else if (countValue === 3) {
-        gift = { ...listGift[6], index: 6 };
-      } else if (countValue === 4 || countValue === 7 || countValue === 9) {
-        gift = { ...listGift[3], index: 3 };
+      if (indexCustomer === 36 || indexCustomer === 89) {
+        gift = { ...listGift[3], index: 3 }; // Xe điện 8tr
+      } else if (
+        indexCustomer === 9 ||
+        indexCustomer === 58 ||
+        indexCustomer === 118 ||
+        indexCustomer === 155
+      ) {
+        gift = { ...listGift[0], index: 0 }; // Máy phát điện
+      } else if (
+        indexCustomer === 1 ||
+        indexCustomer === 2 ||
+        indexCustomer === 3 ||
+        indexCustomer === 4
+      ) {
+        const randomIndex = Math.random() < 0.5 ? 4 : 2;
+        gift = { ...listGift[randomIndex], index: randomIndex };
       } else {
         gift = getGift(random);
       }
@@ -115,9 +124,7 @@ export const Wheel = () => {
           </button>
         </section>
         <h1 className="msg-wheel">{showMsg}</h1>
-        <div className="spin-count">
-          Số lần quay: <p className="count">{spinCount}</p>
-        </div>
+        <div className="spin-count">Khách hàng thứ: {indexCustomer}</div>
       </main>
     </div>
   );

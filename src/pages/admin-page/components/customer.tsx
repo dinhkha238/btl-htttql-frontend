@@ -35,7 +35,11 @@ export const Customer = () => {
   const [imageDataBack, setImageDataBack] = useState(null);
   const [openWheel, setOpenWheel] = useState(false);
 
-  const { mutate: mutateAddUser, isSuccess: isSuccessAddUser } = useAddUser();
+  const {
+    mutate: mutateAddUser,
+    isSuccess: isSuccessAddUser,
+    data: dataAddUser,
+  } = useAddUser();
   const { mutate: mutateUpdateUser } = useUpdateUser();
   const { mutate: mutateDeleteUser } = useDeleteUser();
   const {
@@ -432,7 +436,7 @@ export const Customer = () => {
         onCancel={() => setOpenWheel(false)}
         width={"60%"}
       >
-        <Wheel />
+        <Wheel indexCustomer={dataAddUser?.data?.index} />
       </Modal>
     </div>
   );
