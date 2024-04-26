@@ -9,6 +9,7 @@ const listGift = [
   { text: "NỒI CHIÊN KHÔNG DẦU", percent: 10 / 100 },
   { text: "BỘ NỒI INOX", percent: 35 / 100 },
   { text: "ẤM SIÊU TỐC", percent: 15 / 100 },
+  { text: "CHÚC BẠN MAY MẮN LẦN SAU", percent: 0 / 100 },
 ];
 
 interface WheelProps {
