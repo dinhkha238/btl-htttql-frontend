@@ -14,32 +14,34 @@ export const Admin = () => {
   return (
     <>
       {isAuthenticated == "true" ? (
-        <Row>
-          <Col xl={4} xxl={3}>
-            <Layout
-              style={{
-                minHeight: "100vh",
-                position: "fixed",
-                top: 0,
-              }}
-            >
-              <Sider>
-                <Menu
-                  theme="dark"
-                  mode="vertical"
-                  defaultSelectedKeys={["users"]}
-                  onClick={handleMenuClick} //Gọi hàm xử lý khi click vào mục SideNav
-                >
-                  <Menu.Item key="users">Quản lý khách hàng</Menu.Item>
-                  <Menu.Item onClick={handleLogout}>Đăng xuất</Menu.Item>
-                </Menu>
-              </Sider>
-            </Layout>
-          </Col>
-          <Col xl={20} xxl={21}>
-            {selectedMenu === "users" && <Customer />}
-          </Col>
-        </Row>
+        <Layout>
+          <Row>
+            <Col xl={4} xxl={3} lg={5} xs={0}>
+              <Layout
+                style={{
+                  minHeight: "100vh",
+                  position: "fixed",
+                  top: 0,
+                }}
+              >
+                <Sider>
+                  <Menu
+                    theme="dark"
+                    mode="vertical"
+                    defaultSelectedKeys={["users"]}
+                    onClick={handleMenuClick} //Gọi hàm xử lý khi click vào mục SideNav
+                  >
+                    <Menu.Item key="users">Quản lý khách hàng</Menu.Item>
+                    <Menu.Item onClick={handleLogout}>Đăng xuất</Menu.Item>
+                  </Menu>
+                </Sider>
+              </Layout>
+            </Col>
+            <Col xl={20} xxl={21} lg={19} xs={24}>
+              {selectedMenu === "users" && <Customer />}
+            </Col>
+          </Row>
+        </Layout>
       ) : (
         <Navigate to="/login-admin" />
       )}

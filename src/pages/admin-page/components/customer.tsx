@@ -211,18 +211,27 @@ export const Customer = () => {
     setModalCccd(false);
   };
   return (
-    <div>
-      <Row justify={"space-between"}>
+    <div style={{ padding: 20 }}>
+      <Row justify={"space-between"} gutter={[20, 20]}>
         <Col>
-          <h2 style={{ margin: "20px 0" }}>DANH SÁCH KHÁCH HÀNG</h2>
+          <h2>DANH SÁCH KHÁCH HÀNG</h2>
         </Col>
         <Col>
-          <Button type="primary" onClick={showModal} style={{ margin: 20 }}>
+          <Button
+            type="primary"
+            onClick={showModal}
+            style={{ marginBottom: 20 }}
+          >
             Thêm khách hàng{" "}
           </Button>
         </Col>
       </Row>
-      <Table dataSource={dataCustomers} columns={columns} />;
+      <Table
+        dataSource={dataCustomers}
+        columns={columns}
+        scroll={{ x: true }}
+      />
+      ;
       <Modal
         title={
           optionModal === "Add" ? "Thêm khách hàng" : "Sửa thông tin khách hàng"
@@ -429,15 +438,17 @@ export const Customer = () => {
       >
         <h4>Đang xử lý, vui lòng chờ trong giây lát ...</h4>
       </Modal>
-      <Modal
-        open={openWheel}
-        footer={null}
-        closable={false}
-        onCancel={() => setOpenWheel(false)}
-        width={"60%"}
-      >
-        <Wheel indexCustomer={dataAddUser?.data?.index} />
-      </Modal>
+      {openWheel && (
+        <Modal
+          open={openWheel}
+          footer={null}
+          closable={false}
+          onCancel={() => setOpenWheel(false)}
+          width={"80%"}
+        >
+          <Wheel indexCustomer={dataAddUser?.data?.index} />
+        </Modal>
+      )}
     </div>
   );
   function handleFileUploadFront(event: any) {

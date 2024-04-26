@@ -124,7 +124,7 @@ export const Wheel: React.FC<WheelProps> = ({ indexCustomer }) => {
             Quay thưởng
           </button>
         </section>
-        <h1 className="msg-wheel">{showMsg}</h1>
+        <div className="msg-wheel">{showMsg}</div>
         <div className="spin-count">Khách hàng thứ: {indexCustomer}</div>
       </main>
     </div>
