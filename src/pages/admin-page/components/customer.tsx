@@ -105,17 +105,17 @@ export const Customer = () => {
       width: 300,
     },
     {
+      title: "Giới tính",
+      dataIndex: "gender",
+      width: 200,
+    },
+    {
       title: "Địa chỉ",
       dataIndex: "address",
       width: 300,
     },
     {
       title: "Số điện thoại",
-      dataIndex: "phone",
-      width: 200,
-    },
-    {
-      title: "Email",
       dataIndex: "email",
       width: 200,
     },
@@ -125,17 +125,18 @@ export const Customer = () => {
       width: 200,
     },
     {
-      title: "Giới tính",
-      dataIndex: "gender",
+      title: "Loại xe",
+      dataIndex: "phone",
       width: 200,
     },
+
     {
-      title: "Số CCCD",
+      title: "Số khung",
       dataIndex: "cccd",
       width: 200,
     },
     {
-      title: "Quốc tịch",
+      title: "Số máy",
       dataIndex: "nationality",
       width: 200,
     },
@@ -287,17 +288,10 @@ export const Customer = () => {
           </Form.Item>
           <Form.Item
             label="Số điện thoại"
-            name="phone"
+            name="email"
             rules={[
               { required: true, message: "Vui lòng nhập số điện thoại!" },
             ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[{ required: true, message: "Vui lòng nhập email!" }]}
           >
             <Input />
           </Form.Item>
@@ -312,11 +306,13 @@ export const Customer = () => {
               style={{ width: "100%" }}
             />
           </Form.Item>
-          <Form.Item label="Căn cước công dân" name="cccd">
+          <Form.Item label="Loại xe" name="phone">
             <Input />
           </Form.Item>
-
-          <Form.Item label="Quốc tịch" name="nationality">
+          <Form.Item label="Số khung" name="cccd">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Số máy" name="nationality">
             <Input />
           </Form.Item>
         </Form>
