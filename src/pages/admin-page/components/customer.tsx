@@ -33,7 +33,7 @@ export const Customer = () => {
   const [imageFileBack, setImageFileBack] = useState("");
   const [imageDataFront, setImageDataFront] = useState(null);
   const [imageDataBack, setImageDataBack] = useState(null);
-  const [openWheel, setOpenWheel] = useState(false);
+  const [openWheel, setOpenWheel] = useState(true);
 
   const {
     mutate: mutateAddUser,
@@ -67,9 +67,9 @@ export const Customer = () => {
       date_of_birth:
         dataOcrImage?.data?.data?.front?.fields?.birthday != undefined
           ? dayjs(
-              dataOcrImage?.data?.data?.front?.fields?.birthday,
-              "DD/MM/YYYY"
-            )
+            dataOcrImage?.data?.data?.front?.fields?.birthday,
+            "DD/MM/YYYY"
+          )
           : null,
       gender: dataOcrImage?.data?.data?.front?.fields?.gender,
       address: dataOcrImage?.data?.data?.front?.fields?.home,
@@ -232,7 +232,6 @@ export const Customer = () => {
         columns={columns}
         scroll={{ x: true }}
       />
-      ;
       <Modal
         title={
           optionModal === "Add" ? "Thêm khách hàng" : "Sửa thông tin khách hàng"
@@ -440,7 +439,8 @@ export const Customer = () => {
           footer={null}
           closable={false}
           onCancel={() => setOpenWheel(false)}
-          width={"80%"}
+          // style={{width:"300px"}}
+          width={"60%"}
         >
           <Wheel indexCustomer={dataAddUser?.data?.index} />
         </Modal>
