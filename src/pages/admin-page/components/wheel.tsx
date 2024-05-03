@@ -1,14 +1,14 @@
 import { useState } from "react";
 import "./wheel.css";
 // import { Row, Col } from "antd";
-import { Modal } from 'antd';
-import img1 from "../../../assets/mayphatdien.png"
-import img2 from "../../../assets/quatcay.png"
-import img3 from "../../../assets/noicom.png"
-import img4 from "../../../assets/xedien.png"
-import img5 from "../../../assets/noichien.png"
-import img6 from "../../../assets/noiinox.png"
-import img7 from "../../../assets/amsieutoc.png"
+import { Modal } from "antd";
+import img1 from "../../../assets/mayphatdien.png";
+import img2 from "../../../assets/quatcay.png";
+import img3 from "../../../assets/noicom.png";
+import img4 from "../../../assets/xedien.png";
+import img5 from "../../../assets/noichien.png";
+import img6 from "../../../assets/noiinox.png";
+import img7 from "../../../assets/amsieutoc.png";
 const listGift = [
   { text: "MÁY PHÁT ĐIỆN 8,5 TRIỆU", percent: 0 / 100, imageSrc: img1 },
   { text: "QUẠT CÂY", percent: 25 / 100, imageSrc: img2 },
@@ -65,8 +65,9 @@ export const Wheel: React.FC<WheelProps> = ({ indexCustomer }) => {
     const wheel = document.querySelector(".wheel ul") as HTMLElement;
     console.log(wheel);
     if (wheel) {
-      wheel.style.transform = `rotate(${currentRotate - index * rotate - rotate / 2
-        }deg)`;
+      wheel.style.transform = `rotate(${
+        currentRotate - index * rotate - rotate / 2
+      }deg)`;
     }
   };
   const getGift = (randomNumber: any) => {
@@ -84,18 +85,31 @@ export const Wheel: React.FC<WheelProps> = ({ indexCustomer }) => {
     setTimeout(() => {
       setIsRotating(false);
       Modal.success({
-        title: <span style={{ color: 'red', fontSize: '20px', fontFamily: 'revert' }}>XIN CHÚC MỪNG QUÝ KHÁCH!</span>,
+        title: (
+          <span
+            style={{ color: "red", fontSize: "20px", fontFamily: "revert" }}
+          >
+            XIN CHÚC MỪNG QUÝ KHÁCH!
+          </span>
+        ),
         content: (
-          <div style={{ textAlign: 'center', backgroundColor: '#f0f0f0', padding: '20px', marginRight: '30px' }}>
+          <div
+            style={{
+              textAlign: "center",
+              backgroundColor: "#f0f0f0",
+              padding: "20px",
+              marginRight: "30px",
+            }}
+          >
             <p>Bạn đã nhận được "{gift.text}"</p>
             <img
               src={gift.imageSrc}
               style={{
-                width: '100px',
-                height: '100px',
-                margin: 'auto',
-                display: 'block',
-                marginTop: '30px',
+                width: "100px",
+                height: "100px",
+                margin: "auto",
+                display: "block",
+                marginTop: "30px",
               }}
               alt="Hình ảnh quà tặng"
             />
@@ -106,47 +120,48 @@ export const Wheel: React.FC<WheelProps> = ({ indexCustomer }) => {
           </div>
         ),
         centered: true, // Hiển thị modal ở giữa màn hình
-        width: '400px',
+        width: "400px",
       });
     }, 7000);
   };
 
   return (
-    <div className="wheel" >
+    <div className="wheel">
       {/* <Row justify={"space-between"}>
         <Col>
         </Col>
       </Row> */}
       <main>
         <section className="main-wheel">
-          <span>
+          <span style={{ marginRight: -75 }}>
             <ul className="">
               {listGift.map((item, index) => (
                 <li
                   key={index}
                   style={{
-                    transform: `rotate(${rotate * index
-                      }deg) skewY(-${skewY}deg)`,
+                    transform: `rotate(${
+                      rotate * index
+                    }deg) skewY(-${skewY}deg)`,
                   }}
                 >
                   <p
                     style={{
                       transform: `skewY(${skewY}deg) rotate(${rotate / 2}deg)`,
                     }}
-                    className={`text-wheel text-wheel-${index % 2 === 0 ? "1" : "2"
-                      }`}
+                    className={`text-wheel text-wheel-${
+                      index % 2 === 0 ? "1" : "2"
+                    }`}
                   >
                     <b>{item.text}</b>
                   </p>
                 </li>
               ))}
             </ul>
-            
-          </span>   
-          <button onClick={start}></button>      
-        </section>    
-        <div className="msg-wheel">{showMsg}</div>        
-      </main>      
+          </span>
+          <button onClick={start}></button>
+        </section>
+        <div className="msg-wheel">{showMsg}</div>
+      </main>
     </div>
   );
 };
