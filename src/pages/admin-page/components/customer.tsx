@@ -33,7 +33,7 @@ export const Customer = () => {
   const [imageFileBack, setImageFileBack] = useState("");
   const [imageDataFront, setImageDataFront] = useState(null);
   const [imageDataBack, setImageDataBack] = useState(null);
-  const [openWheel, setOpenWheel] = useState(true);
+  const [openWheel, setOpenWheel] = useState(false);
 
   const {
     mutate: mutateAddUser,
