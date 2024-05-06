@@ -10,13 +10,13 @@ import img5 from "../../../assets/noichien.png";
 import img6 from "../../../assets/noiinox.png";
 import img7 from "../../../assets/amsieutoc.png";
 const listGift = [
-  { text: "MÁY PHÁT ĐIỆN 8,5 TRIỆU", percent: 0 / 100, imageSrc: img1 },
-  { text: "QUẠT CÂY", percent: 25 / 100, imageSrc: img2 },
-  { text: "NỒI CƠM ĐIỆN", percent: 14 / 100, imageSrc: img3 },
-  { text: "XE ĐIỆN 8 TRIỆU", percent: 0 / 100, imageSrc: img4 },
-  { text: "NỒI CHIÊN KHÔNG DẦU", percent: 10 / 100, imageSrc: img5 },
-  { text: "BỘ NỒI INOX", percent: 35 / 100, imageSrc: img6 },
-  { text: "ẤM SIÊU TỐC", percent: 15 / 100, imageSrc: img7 },
+  { text: "MÁY PHÁT ĐIỆN TRỊ GIÁ 8,5 TRIỆU", percent: 0 / 100, imageSrc: img1 },
+  { text: "QUẠT CÂY TRỊ GIÁ 500K", percent: 25 / 100, imageSrc: img2 },
+  { text: "NỒI CƠM ĐIỆN TRỊ GIÁ 1,5 TRIỆU", percent: 14 / 100, imageSrc: img3 },
+  { text: "XE ĐIỆN TRỊ GIÁ 8 TRIỆU", percent: 0 / 100, imageSrc: img4 },
+  { text: "NỒI CHIÊN KHÔNG DẦU TRỊ GIÁ 2,3 TRIỆU", percent: 10 / 100, imageSrc: img5 },
+  { text: "BỘ NỒI INOX TRỊ GIÁ 800K", percent: 35 / 100, imageSrc: img6 },
+  { text: "ẤM SIÊU TỐC TRỊ GIÁ 600K", percent: 15 / 100, imageSrc: img7 },
   { text: "CHÚC BẠN MAY MẮN LẦN SAU", percent: 0 / 100 },
 ];
 
@@ -65,9 +65,8 @@ export const Wheel: React.FC<WheelProps> = ({ indexCustomer }) => {
     const wheel = document.querySelector(".wheel ul") as HTMLElement;
     console.log(wheel);
     if (wheel) {
-      wheel.style.transform = `rotate(${
-        currentRotate - index * rotate - rotate / 2
-      }deg)`;
+      wheel.style.transform = `rotate(${currentRotate - index * rotate - rotate / 2
+        }deg)`;
     }
   };
   const getGift = (randomNumber: any) => {
@@ -87,7 +86,7 @@ export const Wheel: React.FC<WheelProps> = ({ indexCustomer }) => {
       Modal.success({
         title: (
           <span
-            style={{ color: "red", fontSize: "20px", fontFamily: "revert" }}
+            style={{ color: "red", fontSize: "30px", fontFamily: "revert" }}
           >
             XIN CHÚC MỪNG QUÝ KHÁCH!
           </span>
@@ -105,8 +104,8 @@ export const Wheel: React.FC<WheelProps> = ({ indexCustomer }) => {
             <img
               src={gift.imageSrc}
               style={{
-                width: "100px",
-                height: "100px",
+                width: "200px",
+                height: "200px",
                 margin: "auto",
                 display: "block",
                 marginTop: "30px",
@@ -120,7 +119,7 @@ export const Wheel: React.FC<WheelProps> = ({ indexCustomer }) => {
           </div>
         ),
         centered: true, // Hiển thị modal ở giữa màn hình
-        width: "400px",
+        width: "600px",
       });
     }, 7000);
   };
@@ -134,31 +133,37 @@ export const Wheel: React.FC<WheelProps> = ({ indexCustomer }) => {
       <main>
         <section className="main-wheel">
           <span style={{ marginRight: -75 }}>
-            <ul className="">
-              {listGift.map((item, index) => (
-                <li
-                  key={index}
-                  style={{
-                    transform: `rotate(${
-                      rotate * index
-                    }deg) skewY(-${skewY}deg)`,
-                  }}
-                >
-                  <p
+            {/* Hình tròn lớn */}
+            <div>
+              <ul className="">
+                {listGift.map((item, index) => (
+                  <li
+                    key={index}
                     style={{
-                      transform: `skewY(${skewY}deg) rotate(${rotate / 2}deg)`,
+                      transform: `rotate(${rotate * index
+                        }deg) skewY(-${skewY}deg)`,
                     }}
-                    className={`text-wheel text-wheel-${
-                      index % 2 === 0 ? "1" : "2"
-                    }`}
                   >
-                    <b>{item.text}</b>
-                  </p>
-                </li>
-              ))}
-            </ul>
+                    <p
+                      style={{
+                        transform: `skewY(${skewY}deg) rotate(${rotate / 2}deg)`,
+                      }}
+                      className={`text-wheel text-wheel-${index % 2 === 0 ? "1" : "2"
+                        }`}
+                    >
+                      <b>{item.text}</b>
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Hình tròn nhỏ ở giữa */}
+            <div className="small-circle">
+              <button onClick={start} className="circle-button"></button>
+            </div>
           </span>
-          <button onClick={start}></button>
+
         </section>
         <div className="msg-wheel">{showMsg}</div>
       </main>
