@@ -26,7 +26,7 @@ interface WheelProps {
 export const Wheel: React.FC<WheelProps> = ({ indexCustomer }) => {
   const [isRotating, setIsRotating] = useState(false);
   const [currentRotate, setCurrentRotate] = useState(0);
-  const [showMsg, setShowMsg] = useState("");
+  const [showMsg] = useState("");
   const rotate = 360 / listGift.length;
   const skewY = 90 - rotate;
   const start = () => {
