@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { Layout, Menu, Row, Col } from "antd";
 import Sider from "antd/es/layout/Sider";
-import { Customer } from "../components/customer";
+import { PhieuNhap } from "../components/phieu-nhap";
 import { Navigate, useNavigate } from "react-router-dom";
+import { PhieuXuat } from "../components/phieu-xuat";
+import { PhieuBaoCao } from "../components/phieu-bao-cao";
+import { PhieuKiemKe } from "../components/phieu-kiem-ke";
 
 export const Admin = () => {
   const navigate = useNavigate();
-  const [selectedMenu, setSelectedMenu] = useState("users");
+  const [selectedMenu, setSelectedMenu] = useState("qlpn");
   const handleMenuClick = (e: any) => {
     setSelectedMenu(e.key); // Cập nhật trạng thái khi mục SideNav được chọn
   };
@@ -28,17 +31,23 @@ export const Admin = () => {
                   <Menu
                     theme="dark"
                     mode="vertical"
-                    defaultSelectedKeys={["users"]}
+                    defaultSelectedKeys={["qlpn"]}
                     onClick={handleMenuClick} //Gọi hàm xử lý khi click vào mục SideNav
                   >
-                    <Menu.Item key="users">Quản lý khách hàng</Menu.Item>
+                    <Menu.Item key="qlpn">Quản lý phiếu nhập</Menu.Item>
+                    <Menu.Item key="qlpx">Quản lý phiếu xuất</Menu.Item>
+                    <Menu.Item key="qlpbc">Quản lý phiếu báo cáo</Menu.Item>
+                    <Menu.Item key="qlpkk">Quản lý phiếu kiểm kê</Menu.Item>
                     <Menu.Item onClick={handleLogout}>Đăng xuất</Menu.Item>
                   </Menu>
                 </Sider>
               </Layout>
             </Col>
             <Col xl={20} xxl={21} lg={19} xs={24}>
-              {selectedMenu === "users" && <Customer />}
+              {selectedMenu === "qlpn" && <PhieuNhap />}
+              {selectedMenu === "qlpx" && <PhieuXuat />}
+              {selectedMenu === "qlpbc" && <PhieuBaoCao />}
+              {selectedMenu === "qlpkk" && <PhieuKiemKe />}
             </Col>
           </Row>
         </Layout>

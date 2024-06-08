@@ -1,13 +1,37 @@
 import { apiClient } from "../utils/api";
 
 //get
-export const getCustomers = async () => {
-    const result = await apiClient.get("/api/list-customers");
+export const getPhieuNhaps = async () => {
+    const result = await apiClient.get("/phieunhaps");
+    return result.data;
+}
+export const getPhieuXuats = async () => {
+    const result = await apiClient.get("/phieuxuats");
+    return result.data;
+}
+export const getPhieuKiemKes = async () => {
+    const result = await apiClient.get("/phieukiemkes");
+    return result.data;
+}
+export const getPhieuBaoCaos = async () => {
+    const result = await apiClient.get("/phieubaocaos");
     return result.data;
 }
 
-export const getCustomer = async () => {
-    const result = await apiClient.get("/api/get-customer");
+export const getPhieuNhapHangHoa = async (id:any) => {
+    const result = await apiClient.get(`/phieunhaphanghoas/${id}`);
+    return result.data;
+}
+export const getPhieuXuatHangHoa = async (id:any) => {
+    const result = await apiClient.get(`/phieuxuat_hanghoas/${id}`);
+    return result.data;
+}
+export const getPhieuKiemKeHangHoa = async (id:any) => {
+    const result = await apiClient.get(`/phieukiemke_hanghoas/${id}`);
+    return result.data;
+}
+export const getPhieuBaoCaoHangHoa = async (id:any) => {
+    const result = await apiClient.get(`/phieubaocao_hanghoas/${id}`);
     return result.data;
 }
 
