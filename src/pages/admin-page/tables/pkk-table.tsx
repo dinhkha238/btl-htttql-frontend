@@ -25,13 +25,8 @@ export const PKKTable: React.FC<Props> = ({
     },
     {
       title: "ID nhân viên",
-      dataIndex: "idNVien",
-      key: "idNVien",
-    },
-    {
-      title: "Tổng số lượng",
-      dataIndex: "tongsl",
-      key: "tongsl",
+      dataIndex: "idNvien",
+      key: "idNvien",
     },
     {
       title: "Ngày kiểm kê",

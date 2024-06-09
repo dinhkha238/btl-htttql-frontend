@@ -1,7 +1,7 @@
 import { Button, Col, Modal, Row } from "antd";
 import { usePhieuBaoCaoHangHoa, usePhieuBaoCaos } from "../admin.loader";
 import { useEffect, useState } from "react";
-import { HHTable } from "../tables/hh-table";
+import { HHBCTable } from "../tables/hhbc-table";
 import { PBCTable } from "../tables/pbc-table";
 
 export const PhieuBaoCao = () => {
@@ -17,7 +17,7 @@ export const PhieuBaoCao = () => {
     if (dataPhieuBaoCaoHangHoa) {
       let tong = 0;
       dataPhieuBaoCaoHangHoa?.dsHangHoa?.forEach((item: any) => {
-        tong += item.dongia * item.soluong;
+        tong += item.tongtien;
       });
       setTongTien(tong);
     }
@@ -52,7 +52,7 @@ export const PhieuBaoCao = () => {
               <Row>Mã phiếu báo cáo: {dataSelected?.id}</Row>
             </Col>
             <Col span={12}>
-              <Row>Ngày lập: {dataSelected?.ngaynhap}</Row>
+              <Row>Ngày lập: {dataSelected?.ngaybaocao}</Row>
             </Col>
           </Row>
           <Row>
@@ -67,21 +67,13 @@ export const PhieuBaoCao = () => {
           </Row>
           <Row>
             <Col span={12}>
-              <Row>Nhà cung cấp: {dataPhieuBaoCaoHangHoa?.nhacungcap?.ten}</Row>
-            </Col>
-            <Col span={12}>
-              <Row>SĐT: {dataPhieuBaoCaoHangHoa?.nhacungcap?.sdt}</Row>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={12}>
               <Row>Địa chỉ: {dataPhieuBaoCaoHangHoa?.kho?.diachi}</Row>
             </Col>
             <Col span={12}>
               <Row>Tổng tiền: {tongTien}</Row>
             </Col>
           </Row>
-          <HHTable data={dataPhieuBaoCaoHangHoa?.dsHangHoa} />
+          <HHBCTable data={dataPhieuBaoCaoHangHoa?.dsHangHoa} />
         </Modal>
       )}
       {/* <Modal

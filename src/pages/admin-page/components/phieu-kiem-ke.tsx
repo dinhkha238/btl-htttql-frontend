@@ -2,7 +2,7 @@ import { Button, Col, Modal, Row } from "antd";
 import { PKKTable } from "../tables/pkk-table";
 import { usePhieuKiemKeHangHoa, usePhieuKiemKes } from "../admin.loader";
 import { useState } from "react";
-import { HHTable } from "../tables/hh-table";
+import { HHKKTable } from "../tables/hhkk-table";
 
 export const PhieuKiemKe = () => {
   const [visible, setVisible] = useState(false);
@@ -61,7 +61,7 @@ export const PhieuKiemKe = () => {
               <Row>Địa chỉ: {dataPhieuKiemKeHangHoa?.kho?.diachi}</Row>
             </Col>
           </Row>
-          <HHTable data={dataPhieuKiemKeHangHoa?.dsHangHoa} />
+          <HHKKTable data={dataPhieuKiemKeHangHoa?.dsHangHoa} />
         </Modal>
       )}
       {/* <Modal

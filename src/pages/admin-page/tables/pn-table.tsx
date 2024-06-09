@@ -30,8 +30,8 @@ export const PNTable: React.FC<Props> = ({
     },
     {
       title: "ID nhân viên",
-      dataIndex: "idNVien",
-      key: "idNVien",
+      dataIndex: "idNvien",
+      key: "idNvien",
     },
     {
       title: "Tổng số lượng",

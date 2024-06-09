@@ -1,4 +1,4 @@
-import { Button, Col, Modal, Row } from "antd";
+import { Button, Col, DatePicker, Form, Input, Modal, Row, Select } from "antd";
 import { PNTable } from "../tables/pn-table";
 import { usePhieuNhapHangHoa, usePhieuNhaps } from "../admin.loader";
 import { useEffect, useState } from "react";
@@ -8,11 +8,15 @@ export const PhieuNhap = () => {
   const [visible, setVisible] = useState(false);
   const [dataSelected, setDataSelected] = useState<any>({});
   const [tongTien, setTongTien] = useState(0);
+  const [addModal, setAddModal] = useState(false);
+  const [tableData, setTableData] = useState<any[]>([]);
 
   const { data: dataPhieuNhaps } = usePhieuNhaps();
   const { data: dataPhieuNhapHangHoa } = usePhieuNhapHangHoa(
     dataSelected?.id || 1
   );
+  const [form] = Form.useForm();
+
   useEffect(() => {
     if (dataPhieuNhapHangHoa) {
       let tong = 0;
@@ -22,6 +26,34 @@ export const PhieuNhap = () => {
       setTongTien(tong);
     }
   }, [dataPhieuNhapHangHoa]);
+
+  const handleOkAddModal = () => {
+    setAddModal(false);
+  };
+  const handleCancelAddModal = () => {
+    setAddModal(false);
+  };
+  const handleChangeKho = (value: string) => {
+    console.log(`selected ${value}`);
+  };
+  const handleChangeNcc = (value: string) => {
+    console.log(`selected ${value}`);
+  };
+  const onChangeMatHang = (value: string, data: any) => {
+    console.log(`selected ${value}`);
+    form.setFieldsValue({ id: value, ten: data?.label });
+  };
+
+  const onSearch = (value: string) => {
+    console.log("search:", value);
+  };
+
+  // Filter `option.label` match the user type `input`
+  const filterOption = (
+    input: string,
+    option?: { label: string; value: string }
+  ) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+
   return (
     <div style={{ padding: 20 }}>
       <Row justify={"space-between"} gutter={[20, 20]}>
@@ -29,8 +61,15 @@ export const PhieuNhap = () => {
           <h2>QUẢN LÝ PHIẾU NHẬP</h2>
         </Col>
         <Col>
-          <Button type="primary" style={{ marginBottom: 20 }}>
-            Thêm khách hàng{" "}
+          <Button
+            type="primary"
+            style={{ marginBottom: 20 }}
+            onClick={() => {
+              setAddModal(true);
+              setTableData([]);
+            }}
+          >
+            Thêm phiếu nhập
           </Button>
         </Col>
       </Row>
@@ -82,90 +121,126 @@ export const PhieuNhap = () => {
           <HHTable data={dataPhieuNhapHangHoa?.dsHangHoa} />
         </Modal>
       )}
-      {/* <Modal
-        title={
-          optionModal === "Add" ? "Thêm khách hàng" : "Sửa thông tin khách hàng"
-        }
-        visible={addModalVisible}
-        onCancel={handleCancel}
-        onOk={handleOk}
-        centered
-        footer={[
-          <Button key="cancel" onClick={handleCancel}>
-            Hủy
-          </Button>,
-          <Button key="submit" type="primary" onClick={handleOk}>
-            OK
-          </Button>,
-        ]}
-      >
-        <Button
-          type="primary"
-          onClick={handleOpenModalCccc}
-          style={{ margin: "10px 0 30px 0" }}
+      {addModal && (
+        <Modal
+          title={"Thêm phiếu nhập"}
+          visible={addModal}
+          onCancel={handleCancelAddModal}
+          onOk={handleOkAddModal}
+          width={1000}
+          footer={[
+            <Button key="cancel" onClick={handleCancelAddModal}>
+              Hủy
+            </Button>,
+            <Button key="submit" type="primary" onClick={handleOkAddModal}>
+              OK
+            </Button>,
+          ]}
         >
-          Thêm bằng thẻ căn cước công dân
-        </Button>
-        <Form form={form}>
-          <Form.Item
-            label="Fullname"
-            name="fullname"
-            rules={[{ required: true, message: "Vui lòng nhập fullname!" }]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Giới tính"
-            name="gender"
-            rules={[{ required: true, message: "Vui lòng nhập giới tính!" }]}
-          >
-            <Select
-              placeholder={"Chọn giới tính"}
-              options={["Nam", "Nữ"].map((item) => {
-                return { label: item, value: item };
-              })}
-            ></Select>
-          </Form.Item>
-
-          <Form.Item
-            label="Địa chỉ"
-            name="address"
-            rules={[{ required: true, message: "Vui lòng nhập địa chỉ!" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Số điện thoại"
-            name="email"
-            rules={[
-              { required: true, message: "Vui lòng nhập số điện thoại!" },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Ngày sinh"
-            name="date_of_birth"
-            rules={[{ required: true, message: "Vui lòng nhập ngày sinh!" }]}
-          >
-            <DatePicker
-              format={["DD/MM/YYYY", "DD/MM/YYYY"]}
-              placeholder={"Chọn ngày sinh"}
-              style={{ width: "100%" }}
-            />
-          </Form.Item>
-          <Form.Item label="Loại xe" name="phone">
-            <Input />
-          </Form.Item>
-          <Form.Item label="Số khung" name="cccd">
-            <Input />
-          </Form.Item>
-          <Form.Item label="Số máy" name="nationality">
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal> */}
+          <Row>
+            <Col span={12}>
+              <Row>Kho</Row>
+              <Row>
+                <Col span={24}>
+                  <Select
+                    defaultValue="lucy"
+                    style={{ width: 120 }}
+                    onChange={handleChangeKho}
+                    options={[
+                      { value: "jack", label: "Jack" },
+                      { value: "lucy", label: "Lucy" },
+                      { value: "Yiminghe", label: "yiminghe" },
+                      { value: "disabled", label: "Disabled", disabled: true },
+                    ]}
+                  />
+                </Col>
+              </Row>
+              <Row>Nhà cung cấp</Row>
+              <Row>
+                <Col span={24}>
+                  <Select
+                    defaultValue="lucy"
+                    style={{ width: 120 }}
+                    onChange={handleChangeNcc}
+                    options={[
+                      { value: "jack", label: "Jack" },
+                      { value: "lucy", label: "Lucy" },
+                      { value: "Yiminghe", label: "yiminghe" },
+                      { value: "disabled", label: "Disabled", disabled: true },
+                    ]}
+                  />
+                </Col>
+              </Row>
+              <Row>Mặt hàng</Row>
+              <Row>
+                <Select
+                  showSearch
+                  placeholder="Chọn mặt hàng"
+                  optionFilterProp="children"
+                  onChange={onChangeMatHang}
+                  onSearch={onSearch}
+                  filterOption={filterOption}
+                  options={[
+                    {
+                      value: "jack",
+                      label: "Jack",
+                    },
+                    {
+                      value: "lucy",
+                      label: "Lucy",
+                    },
+                    {
+                      value: "tom",
+                      label: "Tom",
+                    },
+                  ]}
+                />
+              </Row>
+              <Row>
+                <Form
+                  form={form}
+                  onFinish={(values) => {
+                    console.log(values);
+                  }}
+                >
+                  <Form.Item label="Mã mặt hàng" name="id">
+                    <Input disabled />
+                  </Form.Item>
+                  <Form.Item label="Tên mặt hàng" name="ten">
+                    <Input disabled />
+                  </Form.Item>
+                  <Form.Item
+                    label="Đơn giá"
+                    name="dongia"
+                    rules={[
+                      { required: true, message: "Vui lòng nhập đơn giá!" },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    label="Số lượng"
+                    name="soluong"
+                    rules={[
+                      { required: true, message: "Vui lòng nhập số lượng!" },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item>
+                    <Button type="primary" htmlType="submit">
+                      Thêm
+                    </Button>
+                  </Form.Item>
+                </Form>
+              </Row>
+            </Col>
+            <Col span={12}>
+              <HHTable data={dataPhieuNhaps} />
+            </Col>
+          </Row>
+        </Modal>
+      )}
     </div>
   );
 };

@@ -26,7 +26,7 @@ export const PBCTable: React.FC<Props> = ({
     {
       title: "ID nhân viên",
       dataIndex: "idNvien",
-      key: "idNVien",
+      key: "idNvien",
     },
     {
       title: "Tổng số lượng",
