@@ -1,8 +1,26 @@
-import { Button, Col, DatePicker, Form, Input, Modal, Row, Select } from "antd";
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  Row,
+  Select,
+  message,
+} from "antd";
 import { PNTable } from "../tables/pn-table";
-import { usePhieuNhapHangHoa, usePhieuNhaps } from "../admin.loader";
+import {
+  useAddPhieuNhap,
+  useHangHoaByIdNcc,
+  useKhos,
+  useNhaCungCaps,
+  usePhieuNhapHangHoa,
+  usePhieuNhaps,
+} from "../admin.loader";
 import { useEffect, useState } from "react";
 import { HHTable } from "../tables/hh-table";
+import { HHTableAdd } from "../tables/hh-table-add";
 
 export const PhieuNhap = () => {
   const [visible, setVisible] = useState(false);
@@ -10,11 +28,18 @@ export const PhieuNhap = () => {
   const [tongTien, setTongTien] = useState(0);
   const [addModal, setAddModal] = useState(false);
   const [tableData, setTableData] = useState<any[]>([]);
+  const [idSelectedNcc, setIdSelectedNcc] = useState<any>();
+  const [idSelectedKho, setIdSelectedKho] = useState<any>();
+  const [tongTienMatHang, setTongTienMatHang] = useState(0);
 
+  const { data: dataKhos } = useKhos();
+  const { data: dataNhaCungCaps } = useNhaCungCaps();
+  const { data: dataHangHoas } = useHangHoaByIdNcc(idSelectedNcc);
   const { data: dataPhieuNhaps } = usePhieuNhaps();
   const { data: dataPhieuNhapHangHoa } = usePhieuNhapHangHoa(
     dataSelected?.id || 1
   );
+  const { mutate: mutateAdd } = useAddPhieuNhap();
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -26,18 +51,41 @@ export const PhieuNhap = () => {
       setTongTien(tong);
     }
   }, [dataPhieuNhapHangHoa]);
+  useEffect(() => {
+    let tong = 0;
+    tableData.forEach((item) => {
+      tong += item.thanhtien;
+    });
+    setTongTienMatHang(tong);
+  }, [tableData]);
 
   const handleOkAddModal = () => {
+    var data = {
+      ngaynhap: new Date().toISOString().split("T")[0],
+      idNcc: idSelectedNcc,
+      idKho: idSelectedKho,
+      idNvien: 1,
+      hanghoas: tableData.map((item) => {
+        return {
+          idHanghoa: item.id,
+          dongia: item.dongia,
+          soluong: item.soluong,
+        };
+      }),
+    };
+    mutateAdd(data);
     setAddModal(false);
   };
   const handleCancelAddModal = () => {
     setAddModal(false);
   };
   const handleChangeKho = (value: string) => {
-    console.log(`selected ${value}`);
+    setIdSelectedKho(value);
   };
   const handleChangeNcc = (value: string) => {
-    console.log(`selected ${value}`);
+    setIdSelectedNcc(value);
+    setTableData([]);
+    form.resetFields();
   };
   const onChangeMatHang = (value: string, data: any) => {
     console.log(`selected ${value}`);
@@ -138,20 +186,17 @@ export const PhieuNhap = () => {
           ]}
         >
           <Row>
-            <Col span={12}>
+            <Col span={10}>
               <Row>Kho</Row>
               <Row>
                 <Col span={24}>
                   <Select
-                    defaultValue="lucy"
-                    style={{ width: 120 }}
+                    style={{ width: 350 }}
                     onChange={handleChangeKho}
-                    options={[
-                      { value: "jack", label: "Jack" },
-                      { value: "lucy", label: "Lucy" },
-                      { value: "Yiminghe", label: "yiminghe" },
-                      { value: "disabled", label: "Disabled", disabled: true },
-                    ]}
+                    options={dataKhos?.map((item: any) => {
+                      return { value: item.id, label: item.ten };
+                    })}
+                    placeholder="Chọn kho"
                   />
                 </Col>
               </Row>
@@ -159,15 +204,12 @@ export const PhieuNhap = () => {
               <Row>
                 <Col span={24}>
                   <Select
-                    defaultValue="lucy"
-                    style={{ width: 120 }}
+                    style={{ width: 350 }}
                     onChange={handleChangeNcc}
-                    options={[
-                      { value: "jack", label: "Jack" },
-                      { value: "lucy", label: "Lucy" },
-                      { value: "Yiminghe", label: "yiminghe" },
-                      { value: "disabled", label: "Disabled", disabled: true },
-                    ]}
+                    options={dataNhaCungCaps?.map((item: any) => {
+                      return { value: item.id, label: item.ten };
+                    })}
+                    placeholder="Chọn nhà cung cấp"
                   />
                 </Col>
               </Row>
@@ -180,31 +222,35 @@ export const PhieuNhap = () => {
                   onChange={onChangeMatHang}
                   onSearch={onSearch}
                   filterOption={filterOption}
-                  options={[
-                    {
-                      value: "jack",
-                      label: "Jack",
-                    },
-                    {
-                      value: "lucy",
-                      label: "Lucy",
-                    },
-                    {
-                      value: "tom",
-                      label: "Tom",
-                    },
-                  ]}
+                  options={dataHangHoas?.map((item: any) => {
+                    return {
+                      value: item.id,
+                      label: item.ten,
+                    };
+                  })}
+                  style={{ width: 350 }}
                 />
               </Row>
               <Row>
                 <Form
                   form={form}
                   onFinish={(values) => {
-                    console.log(values);
+                    if (tableData.find((item) => item.id === values.id)) {
+                      message.error("Mặt hàng đã tồn tại!");
+                    } else {
+                      values.thanhtien = values.dongia * values.soluong;
+                      tableData.push(values);
+                      setTableData([...tableData]);
+                      form.resetFields(["dongia", "soluong"]);
+                    }
                   }}
                 >
-                  <Form.Item label="Mã mặt hàng" name="id">
-                    <Input disabled />
+                  <Form.Item
+                    label="Mã mặt hàng"
+                    name="id"
+                    style={{ marginTop: 20 }}
+                  >
+                    <Input disabled style={{ width: 250 }} />
                   </Form.Item>
                   <Form.Item label="Tên mặt hàng" name="ten">
                     <Input disabled />
@@ -216,7 +262,7 @@ export const PhieuNhap = () => {
                       { required: true, message: "Vui lòng nhập đơn giá!" },
                     ]}
                   >
-                    <Input />
+                    <InputNumber style={{ width: 200 }} />
                   </Form.Item>
                   <Form.Item
                     label="Số lượng"
@@ -225,7 +271,7 @@ export const PhieuNhap = () => {
                       { required: true, message: "Vui lòng nhập số lượng!" },
                     ]}
                   >
-                    <Input />
+                    <InputNumber style={{ width: 200 }} />
                   </Form.Item>
                   <Form.Item>
                     <Button type="primary" htmlType="submit">
@@ -235,8 +281,13 @@ export const PhieuNhap = () => {
                 </Form>
               </Row>
             </Col>
-            <Col span={12}>
-              <HHTable data={dataPhieuNhaps} />
+            <Col span={14}>
+              <HHTableAdd
+                data={tableData}
+                tableData={tableData}
+                setTableData={setTableData}
+              />
+              <Row>Tổng tiền mặt hàng: {tongTienMatHang}</Row>
             </Col>
           </Row>
         </Modal>
