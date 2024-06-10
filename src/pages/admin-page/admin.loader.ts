@@ -1,6 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   addPhieuNhap,
+  addPhieuXuat,
+  getDaiLys,
+  getHangHoaByIdKho,
   getHangHoaByIdNcc,
   getKhos,
   getNhaCungCaps,
@@ -26,6 +29,7 @@ export const CACHE_KEYS = {
   InforPhieuBaoCaoHangHoa: "InforPhieuBaoCaoHangHoa",
   InforKhos: "InforKhos",
   InforNhaCungCaps: "InforNhaCungCaps",
+  InforDaiLys: "InforDaiLys",
 };
 
 export const usePhieuNhaps = () => {
@@ -66,9 +70,17 @@ export const useKhos = () => {
 export const useNhaCungCaps = () => {
   return useQuery(CACHE_KEYS.InforNhaCungCaps, () => getNhaCungCaps());
 };
+export const useDaiLys = () => {
+  return useQuery(CACHE_KEYS.InforDaiLys, () => getDaiLys());
+};
 export const useHangHoaByIdNcc = (idNcc: any) => {
   return useQuery([CACHE_KEYS.InforNhaCungCaps, idNcc], () =>
     getHangHoaByIdNcc(idNcc)
+  );
+};
+export const useHangHoaByIdKho = (idKho: any) => {
+  return useQuery([CACHE_KEYS.InforKhos, idKho], () =>
+    getHangHoaByIdKho(idKho)
   );
 };
 
@@ -81,6 +93,24 @@ export const useAddPhieuNhap = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(CACHE_KEYS.InforPhieuNhaps);
+        message.success("Add success");
+      },
+      onError: () => {
+        message.error("Add failed");
+      },
+    }
+  );
+};
+
+export const useAddPhieuXuat = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (data: any) => {
+      return addPhieuXuat(data);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(CACHE_KEYS.InforPhieuXuats);
         message.success("Add success");
       },
       onError: () => {

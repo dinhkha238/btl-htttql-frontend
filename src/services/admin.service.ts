@@ -43,14 +43,26 @@ export const getNhaCungCaps = async () => {
   const result = await apiClient.get("/nhacungcaps");
   return result.data;
 };
+export const getDaiLys = async () => {
+  const result = await apiClient.get("/dailys");
+  return result.data;
+};
 export const getHangHoaByIdNcc = async (idNcc: any) => {
-  const result = await apiClient.get(`/hanghoas/${idNcc}`);
+  const result = await apiClient.get(`/hanghoas-by-idNcc/${idNcc}`);
+  return result.data;
+};
+export const getHangHoaByIdKho = async (idKho: any) => {
+  const result = await apiClient.get(`/hanghoas-by-idKho/${idKho}`);
   return result.data;
 };
 
 //post
 export const addPhieuNhap = async (data: any) => {
   const result = await apiClient.post("/phieunhaps", data);
+  return result.data;
+};
+export const addPhieuXuat = async (data: any) => {
+  const result = await apiClient.post("/phieuxuats", data);
   return result.data;
 };
 
