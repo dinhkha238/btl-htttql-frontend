@@ -14,7 +14,6 @@ import {
   useAddPhieuXuat,
   useDaiLys,
   useHangHoaByIdKho,
-  useHangHoaByIdNcc,
   useKhos,
   usePhieuXuatHangHoa,
   usePhieuXuats,

@@ -1,74 +1,40 @@
+import { Button, Col, Form, Input, Modal, Row, Select, message } from "antd";
+import { HHKKAddTable, PKKTable } from "../tables/pkk-table";
 import {
-  Button,
-  Col,
-  Form,
-  Input,
-  InputNumber,
-  Modal,
-  Row,
-  Select,
-  message,
-} from "antd";
-import { PKKTable } from "../tables/pkk-table";
-import {
-  useAddPhieuXuat,
-  useDaiLys,
-  useHangHoaByIdNcc,
+  useAddPhieuKiemKe,
+  useHangHoaByIdKho,
   useKhos,
   usePhieuKiemKeHangHoa,
   usePhieuKiemKes,
 } from "../admin.loader";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { HHKKTable } from "../tables/hhkk-table";
-import { HHTableAdd } from "../tables/hh-table-add";
 
 export const PhieuKiemKe = () => {
   const [visible, setVisible] = useState(false);
   const [dataSelected, setDataSelected] = useState<any>({});
-  const [tongTien, setTongTien] = useState(0);
   const [addModal, setAddModal] = useState(false);
   const [tableData, setTableData] = useState<any[]>([]);
-  const [idSelectedNcc, setIdSelectedNcc] = useState<any>();
   const [idSelectedKho, setIdSelectedKho] = useState<any>();
-  const [tongTienMatHang, setTongTienMatHang] = useState(0);
 
   const { data: dataKhos } = useKhos();
-  const { data: dataDaiLys } = useDaiLys();
-  const { data: dataHangHoas } = useHangHoaByIdNcc(idSelectedNcc);
+  const { data: dataHangHoas } = useHangHoaByIdKho(idSelectedKho);
   const { data: dataPhieuKiemKes } = usePhieuKiemKes();
   const { data: dataPhieuKiemKeHangHoa } = usePhieuKiemKeHangHoa(
     dataSelected?.id || 1
   );
-  const { mutate: mutateAdd } = useAddPhieuXuat();
+  const { mutate: mutateAdd } = useAddPhieuKiemKe();
   const [form] = Form.useForm();
-  useEffect(() => {
-    if (dataPhieuKiemKeHangHoa) {
-      let tong = 0;
-      dataPhieuKiemKeHangHoa?.dsHangHoa?.forEach((item: any) => {
-        tong += item.dongia * item.soluong;
-      });
-      setTongTien(tong);
-    }
-  }, [dataPhieuKiemKeHangHoa]);
-  useEffect(() => {
-    let tong = 0;
-    tableData.forEach((item) => {
-      tong += item.thanhtien;
-    });
-    setTongTienMatHang(tong);
-  }, [tableData]);
 
   const handleOkAddModal = () => {
     var data = {
-      ngayxuat: new Date().toISOString().split("T")[0],
-      idDaily: idSelectedNcc,
+      ngaykiemke: new Date().toISOString().split("T")[0],
       idKho: idSelectedKho,
       idNvien: 1,
       hanghoas: tableData.map((item) => {
         return {
           idHanghoa: item.id,
-          dongia: item.dongia,
-          soluong: item.soluong,
+          soluong: item.soluongton,
         };
       }),
     };
@@ -81,14 +47,13 @@ export const PhieuKiemKe = () => {
   const handleChangeKho = (value: string) => {
     setIdSelectedKho(value);
   };
-  const handleChangeNcc = (value: string) => {
-    setIdSelectedNcc(value);
-    setTableData([]);
-    form.resetFields();
-  };
   const onChangeMatHang = (value: string, data: any) => {
     console.log(`selected ${value}`);
-    form.setFieldsValue({ id: value, ten: data?.label });
+    form.setFieldsValue({
+      id: value,
+      ten: data?.label,
+      soluongton: data?.soluongton,
+    });
   };
 
   const onSearch = (value: string) => {
@@ -190,19 +155,6 @@ export const PhieuKiemKe = () => {
                   />
                 </Col>
               </Row>
-              <Row>Đại lý</Row>
-              <Row>
-                <Col span={24}>
-                  <Select
-                    style={{ width: 350 }}
-                    onChange={handleChangeNcc}
-                    options={dataDaiLys?.map((item: any) => {
-                      return { value: item.id, label: item.ten };
-                    })}
-                    placeholder="Chọn đại lý"
-                  />
-                </Col>
-              </Row>
               <Row>Mặt hàng</Row>
               <Row>
                 <Select
@@ -216,6 +168,7 @@ export const PhieuKiemKe = () => {
                     return {
                       value: item.id,
                       label: item.ten,
+                      soluongton: item.soluongton,
                     };
                   })}
                   style={{ width: 350 }}
@@ -225,14 +178,8 @@ export const PhieuKiemKe = () => {
                 <Form
                   form={form}
                   onFinish={(values) => {
-                    if (tableData.find((item) => item.id === values.id)) {
-                      message.error("Mặt hàng đã tồn tại!");
-                    } else {
-                      values.thanhtien = values.dongia * values.soluong;
-                      tableData.push(values);
-                      setTableData([...tableData]);
-                      form.resetFields(["dongia", "soluong"]);
-                    }
+                    tableData.push(values);
+                    setTableData([...tableData]);
                   }}
                 >
                   <Form.Item
@@ -245,23 +192,8 @@ export const PhieuKiemKe = () => {
                   <Form.Item label="Tên mặt hàng" name="ten">
                     <Input disabled />
                   </Form.Item>
-                  <Form.Item
-                    label="Đơn giá"
-                    name="dongia"
-                    rules={[
-                      { required: true, message: "Vui lòng nhập đơn giá!" },
-                    ]}
-                  >
-                    <InputNumber style={{ width: 200 }} />
-                  </Form.Item>
-                  <Form.Item
-                    label="Số lượng"
-                    name="soluong"
-                    rules={[
-                      { required: true, message: "Vui lòng nhập số lượng!" },
-                    ]}
-                  >
-                    <InputNumber style={{ width: 200 }} />
+                  <Form.Item label="Còn lại" name="soluongton">
+                    <Input disabled />
                   </Form.Item>
                   <Form.Item>
                     <Button type="primary" htmlType="submit">
@@ -272,12 +204,11 @@ export const PhieuKiemKe = () => {
               </Row>
             </Col>
             <Col span={14}>
-              <HHTableAdd
+              <HHKKAddTable
                 data={tableData}
                 tableData={tableData}
                 setTableData={setTableData}
               />
-              <Row>Tổng tiền mặt hàng: {tongTienMatHang}</Row>
             </Col>
           </Row>
         </Modal>

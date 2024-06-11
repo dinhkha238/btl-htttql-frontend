@@ -65,6 +65,10 @@ export const addPhieuXuat = async (data: any) => {
   const result = await apiClient.post("/phieuxuats", data);
   return result.data;
 };
+export const addPhieuKiemKe = async (data: any) => {
+  const result = await apiClient.post("/phieukiemkes", data);
+  return result.data;
+};
 
 export const checkLogin = async (data: any) => {
   const result = await apiClient.post("/api/login", data);

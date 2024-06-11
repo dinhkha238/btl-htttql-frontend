@@ -7,6 +7,12 @@ interface Props {
   setDataSelected: any;
 }
 
+interface AddProps {
+  data: any;
+  tableData: any;
+  setTableData: any;
+}
+
 export const PKKTable: React.FC<Props> = ({
   data,
   setVisible,
@@ -55,6 +61,47 @@ export const PKKTable: React.FC<Props> = ({
           // setIsModalOpen(true);
           // setIdSelected(data.id);
           // setUserSelected(data.email);
+        }
+      },
+    },
+  ];
+  return <Table columns={columns} dataSource={data} />;
+};
+
+export const HHKKAddTable: React.FC<AddProps> = ({
+  data,
+  tableData,
+  setTableData,
+}) => {
+  const columns: TableProps["columns"] = [
+    {
+      title: "Mã hàng hóa",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Mặt hàng",
+      dataIndex: "ten",
+      key: "ten",
+    },
+    {
+      title: "Số lượng tồn",
+      dataIndex: "soluongton",
+      key: "soluongton",
+    },
+    {
+      title: "Hoạt động",
+      dataIndex: "active",
+      render: (_: any, data: any) => {
+        return (
+          <div>
+            <DeleteOutlined style={{ color: "red" }} onClick={handleDelete} />
+          </div>
+        );
+        function handleDelete() {
+          const index = tableData.findIndex((item: any) => item.id === data.id);
+          tableData.splice(index, 1);
+          setTableData([...tableData]);
         }
       },
     },

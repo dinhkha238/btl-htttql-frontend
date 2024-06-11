@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
+  addPhieuKiemKe,
   addPhieuNhap,
   addPhieuXuat,
   getDaiLys,
@@ -111,6 +112,23 @@ export const useAddPhieuXuat = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(CACHE_KEYS.InforPhieuXuats);
+        message.success("Add success");
+      },
+      onError: () => {
+        message.error("Add failed");
+      },
+    }
+  );
+};
+export const useAddPhieuKiemKe = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (data: any) => {
+      return addPhieuKiemKe(data);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(CACHE_KEYS.InforPhieuKiemKes);
         message.success("Add success");
       },
       onError: () => {
