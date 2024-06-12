@@ -1,26 +1,22 @@
 import {
   Button,
   Col,
-  Form,
-  Input,
-  InputNumber,
+  DatePicker,
+  DatePickerProps,
   Modal,
   Row,
   Select,
-  message,
 } from "antd";
 import {
-  useAddPhieuXuat,
-  useDaiLys,
-  useHangHoaByIdNcc,
+  useAddPhieuBaoCao,
+  useHangHoaByIdKhoForBaoCao,
   useKhos,
   usePhieuBaoCaoHangHoa,
   usePhieuBaoCaos,
 } from "../admin.loader";
 import { useEffect, useState } from "react";
 import { HHBCTable } from "../tables/hhbc-table";
-import { PBCTable } from "../tables/pbc-table";
-import { HHTableAdd } from "../tables/hh-table-add";
+import { PBCAddTable, PBCTable } from "../tables/pbc-table";
 
 export const PhieuBaoCao = () => {
   const [visible, setVisible] = useState(false);
@@ -28,20 +24,20 @@ export const PhieuBaoCao = () => {
   const [tongTien, setTongTien] = useState(0);
   const [addModal, setAddModal] = useState(false);
   const [tableData, setTableData] = useState<any[]>([]);
-  const [idSelectedNcc, setIdSelectedNcc] = useState<any>();
   const [idSelectedKho, setIdSelectedKho] = useState<any>();
   const [tongTienMatHang, setTongTienMatHang] = useState(0);
+  const [dataBaoCao, setDataBaoCao] = useState<any>({});
+  const [yearMonth, setYearMonth] = useState<any>();
 
   const { data: dataKhos } = useKhos();
-  const { data: dataDaiLys } = useDaiLys();
-  const { data: dataHangHoas } = useHangHoaByIdNcc(idSelectedNcc);
+  const { data: dataHangHoas } = useHangHoaByIdKhoForBaoCao(dataBaoCao);
   const { data: dataPhieuBaoCaos } = usePhieuBaoCaos();
   const { data: dataPhieuBaoCaoHangHoa } = usePhieuBaoCaoHangHoa(
     dataSelected?.id || 1
   );
 
-  const { mutate: mutateAdd } = useAddPhieuXuat();
-  const [form] = Form.useForm();
+  const { mutate: mutateAdd } = useAddPhieuBaoCao();
+
   useEffect(() => {
     if (dataPhieuBaoCaoHangHoa) {
       let tong = 0;
@@ -52,24 +48,40 @@ export const PhieuBaoCao = () => {
     }
   }, [dataPhieuBaoCaoHangHoa]);
   useEffect(() => {
+    if (dataHangHoas) {
+      setTableData(
+        dataHangHoas.map((item: any) => {
+          return {
+            id: item.id,
+            ten: item.ten,
+            soluongxuat: item.soluongxuat,
+            doanhthu: item.doanhthu,
+            ngayxuat: item.ngayxuat,
+          };
+        })
+      );
+    }
+  }, [dataHangHoas]);
+
+  useEffect(() => {
     let tong = 0;
     tableData.forEach((item) => {
-      tong += item.thanhtien;
+      tong += item.doanhthu;
     });
     setTongTienMatHang(tong);
   }, [tableData]);
 
   const handleOkAddModal = () => {
     var data = {
-      ngayxuat: new Date().toISOString().split("T")[0],
-      idDaily: idSelectedNcc,
+      ngaybaocao: new Date().toISOString().split("T")[0],
       idKho: idSelectedKho,
       idNvien: 1,
       hanghoas: tableData.map((item) => {
         return {
           idHanghoa: item.id,
-          dongia: item.dongia,
-          soluong: item.soluong,
+          slban: item.soluongxuat,
+          tongtien: item.doanhthu,
+          ngayxuat: item.ngayxuat,
         };
       }),
     };
@@ -82,26 +94,10 @@ export const PhieuBaoCao = () => {
   const handleChangeKho = (value: string) => {
     setIdSelectedKho(value);
   };
-  const handleChangeNcc = (value: string) => {
-    setIdSelectedNcc(value);
-    setTableData([]);
-    form.resetFields();
-  };
-  const onChangeMatHang = (value: string, data: any) => {
-    console.log(`selected ${value}`);
-    form.setFieldsValue({ id: value, ten: data?.label });
-  };
 
-  const onSearch = (value: string) => {
-    console.log("search:", value);
+  const onChange: DatePickerProps["onChange"] = (_, dateString) => {
+    setYearMonth(dateString);
   };
-
-  // Filter `option.label` match the user type `input`
-  const filterOption = (
-    input: string,
-    option?: { label: string; value: string }
-  ) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
-
   return (
     <div style={{ padding: 20 }}>
       <Row justify={"space-between"} gutter={[20, 20]}>
@@ -165,7 +161,7 @@ export const PhieuBaoCao = () => {
       )}
       {addModal && (
         <Modal
-          title={"Thêm phiếu xuất"}
+          title={"Thêm phiếu báo cáo"}
           visible={addModal}
           onCancel={handleCancelAddModal}
           onOk={handleOkAddModal}
@@ -180,103 +176,47 @@ export const PhieuBaoCao = () => {
           ]}
         >
           <Row>
-            <Col span={10}>
-              <Row>Kho</Row>
+            <Col span={24}>
               <Row>
-                <Col span={24}>
-                  <Select
-                    style={{ width: 350 }}
-                    onChange={handleChangeKho}
-                    options={dataKhos?.map((item: any) => {
-                      return { value: item.id, label: item.ten };
-                    })}
-                    placeholder="Chọn kho"
-                  />
+                <Col>
+                  <Row>Kho</Row>
+                  <Row>
+                    <Select
+                      style={{ width: 300 }}
+                      onChange={handleChangeKho}
+                      options={dataKhos?.map((item: any) => {
+                        return { value: item.id, label: item.ten };
+                      })}
+                      placeholder="Chọn kho"
+                    />
+                  </Row>
                 </Col>
-              </Row>
-              <Row>Đại lý</Row>
-              <Row>
-                <Col span={24}>
-                  <Select
-                    style={{ width: 350 }}
-                    onChange={handleChangeNcc}
-                    options={dataDaiLys?.map((item: any) => {
-                      return { value: item.id, label: item.ten };
-                    })}
-                    placeholder="Chọn đại lý"
-                  />
+                <Col style={{ margin: "0 20px" }}>
+                  <Row>Thời gian</Row>
+                  <Row>
+                    <DatePicker onChange={onChange} picker="month" />
+                  </Row>
                 </Col>
-              </Row>
-              <Row>Mặt hàng</Row>
-              <Row>
-                <Select
-                  showSearch
-                  placeholder="Chọn mặt hàng"
-                  optionFilterProp="children"
-                  onChange={onChangeMatHang}
-                  onSearch={onSearch}
-                  filterOption={filterOption}
-                  options={dataHangHoas?.map((item: any) => {
-                    return {
-                      value: item.id,
-                      label: item.ten,
-                    };
-                  })}
-                  style={{ width: 350 }}
-                />
-              </Row>
-              <Row>
-                <Form
-                  form={form}
-                  onFinish={(values) => {
-                    if (tableData.find((item) => item.id === values.id)) {
-                      message.error("Mặt hàng đã tồn tại!");
-                    } else {
-                      values.thanhtien = values.dongia * values.soluong;
-                      tableData.push(values);
-                      setTableData([...tableData]);
-                      form.resetFields(["dongia", "soluong"]);
-                    }
-                  }}
-                >
-                  <Form.Item
-                    label="Mã mặt hàng"
-                    name="id"
-                    style={{ marginTop: 20 }}
-                  >
-                    <Input disabled style={{ width: 250 }} />
-                  </Form.Item>
-                  <Form.Item label="Tên mặt hàng" name="ten">
-                    <Input disabled />
-                  </Form.Item>
-                  <Form.Item
-                    label="Đơn giá"
-                    name="dongia"
-                    rules={[
-                      { required: true, message: "Vui lòng nhập đơn giá!" },
-                    ]}
-                  >
-                    <InputNumber style={{ width: 200 }} />
-                  </Form.Item>
-                  <Form.Item
-                    label="Số lượng"
-                    name="soluong"
-                    rules={[
-                      { required: true, message: "Vui lòng nhập số lượng!" },
-                    ]}
-                  >
-                    <InputNumber style={{ width: 200 }} />
-                  </Form.Item>
-                  <Form.Item>
-                    <Button type="primary" htmlType="submit">
+                <Col>
+                  <Row>
+                    <Button
+                      type="primary"
+                      onClick={() => {
+                        setDataBaoCao({
+                          idKho: idSelectedKho,
+                          year_month: yearMonth,
+                        });
+                      }}
+                      style={{ marginTop: 23 }}
+                    >
                       Thêm
                     </Button>
-                  </Form.Item>
-                </Form>
+                  </Row>
+                </Col>
               </Row>
             </Col>
-            <Col span={14}>
-              <HHTableAdd
+            <Col span={24}>
+              <PBCAddTable
                 data={tableData}
                 tableData={tableData}
                 setTableData={setTableData}

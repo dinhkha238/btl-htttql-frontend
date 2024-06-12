@@ -55,6 +55,12 @@ export const getHangHoaByIdKho = async (idKho: any) => {
   const result = await apiClient.get(`/hanghoas-by-idKho/${idKho}`);
   return result.data;
 };
+export const getHangHoaForPbchh = async (data: any) => {
+  const result = await apiClient.get(
+    `/hanghoas-for-pbchh/${data?.idKho}/${data?.year_month}`
+  );
+  return result.data;
+};
 
 //post
 export const addPhieuNhap = async (data: any) => {
@@ -67,6 +73,10 @@ export const addPhieuXuat = async (data: any) => {
 };
 export const addPhieuKiemKe = async (data: any) => {
   const result = await apiClient.post("/phieukiemkes", data);
+  return result.data;
+};
+export const addPhieuBaoCao = async (data: any) => {
+  const result = await apiClient.post("/phieubaocaos", data);
   return result.data;
 };
 

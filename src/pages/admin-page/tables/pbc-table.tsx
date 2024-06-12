@@ -6,6 +6,11 @@ interface Props {
   setVisible: any;
   setDataSelected: any;
 }
+interface AddProps {
+  data: any;
+  tableData: any;
+  setTableData: any;
+}
 
 export const PBCTable: React.FC<Props> = ({
   data,
@@ -67,6 +72,37 @@ export const PBCTable: React.FC<Props> = ({
           // setUserSelected(data.email);
         }
       },
+    },
+  ];
+  return <Table columns={columns} dataSource={data} />;
+};
+
+export const PBCAddTable: React.FC<AddProps> = ({ data }) => {
+  const columns: TableProps["columns"] = [
+    {
+      title: "Mã hàng hóa",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Mặt hàng",
+      dataIndex: "ten",
+      key: "ten",
+    },
+    {
+      title: "Tổng số lượng",
+      dataIndex: "soluongxuat",
+      key: "soluongxuat",
+    },
+    {
+      title: "Tổng tiền",
+      dataIndex: "doanhthu",
+      key: "doanhthu",
+    },
+    {
+      title: "Ngày xuất hàng",
+      dataIndex: "ngayxuat",
+      key: "ngayxuat",
     },
   ];
   return <Table columns={columns} dataSource={data} />;

@@ -126,7 +126,7 @@ export const PhieuKiemKe = () => {
       )}
       {addModal && (
         <Modal
-          title={"Thêm phiếu xuất"}
+          title={"Thêm phiếu kiểm kê"}
           visible={addModal}
           onCancel={handleCancelAddModal}
           onOk={handleOkAddModal}

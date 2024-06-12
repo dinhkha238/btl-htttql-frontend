@@ -20,11 +20,17 @@ export const HHBCTable: React.FC<Props> = ({ data }) => {
       title: "Số lượng bán",
       dataIndex: "slban",
       key: "slban",
+      sorter: (a, b) => a.slban - b.slban,
     },
     {
       title: "Tổng tiền",
       dataIndex: "tongtien",
       key: "tongtien",
+    },
+    {
+      title: "Ngày xuất hàng",
+      dataIndex: "ngayxuat",
+      key: "ngayxuat",
     },
   ];
   return <Table columns={columns} dataSource={data} />;

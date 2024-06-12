@@ -36,8 +36,8 @@ export const Admin = () => {
                   >
                     <Menu.Item key="qlpn">Quản lý phiếu nhập</Menu.Item>
                     <Menu.Item key="qlpx">Quản lý phiếu xuất</Menu.Item>
-                    <Menu.Item key="qlpbc">Quản lý phiếu báo cáo</Menu.Item>
                     <Menu.Item key="qlpkk">Quản lý phiếu kiểm kê</Menu.Item>
+                    <Menu.Item key="qlpbc">Quản lý phiếu báo cáo</Menu.Item>
                     <Menu.Item onClick={handleLogout}>Đăng xuất</Menu.Item>
                   </Menu>
                 </Sider>

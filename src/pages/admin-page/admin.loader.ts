@@ -1,11 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
+  addPhieuBaoCao,
   addPhieuKiemKe,
   addPhieuNhap,
   addPhieuXuat,
   getDaiLys,
   getHangHoaByIdKho,
   getHangHoaByIdNcc,
+  getHangHoaForPbchh,
   getKhos,
   getNhaCungCaps,
   getPhieuBaoCaoHangHoa,
@@ -84,6 +86,9 @@ export const useHangHoaByIdKho = (idKho: any) => {
     getHangHoaByIdKho(idKho)
   );
 };
+export const useHangHoaByIdKhoForBaoCao = (data: any) => {
+  return useQuery([CACHE_KEYS.InforKhos, data], () => getHangHoaForPbchh(data));
+};
 
 export const useAddPhieuNhap = () => {
   const queryClient = useQueryClient();
@@ -129,6 +134,23 @@ export const useAddPhieuKiemKe = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(CACHE_KEYS.InforPhieuKiemKes);
+        message.success("Add success");
+      },
+      onError: () => {
+        message.error("Add failed");
+      },
+    }
+  );
+};
+export const useAddPhieuBaoCao = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (data: any) => {
+      return addPhieuBaoCao(data);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(CACHE_KEYS.InforPhieuBaoCaos);
         message.success("Add success");
       },
       onError: () => {
