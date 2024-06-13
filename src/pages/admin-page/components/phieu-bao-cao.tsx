@@ -14,6 +14,16 @@ import {
   usePhieuBaoCaoHangHoa,
   usePhieuBaoCaos,
 } from "../admin.loader";
+import {
+  Bar,
+  CartesianGrid,
+  Legend,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Line,
+  ComposedChart,
+} from "recharts";
 import { useEffect, useState } from "react";
 import { HHBCTable } from "../tables/hhbc-table";
 import { PBCAddTable, PBCTable } from "../tables/pbc-table";
@@ -122,6 +132,7 @@ export const PhieuBaoCao = () => {
         setVisible={setVisible}
         setDataSelected={setDataSelected}
       />
+
       {visible && (
         <Modal
           title={"Thông tin phiếu báo cáo"}
@@ -162,6 +173,46 @@ export const PhieuBaoCao = () => {
             </Col>
           </Row>
           <HHBCTable data={dataPhieuBaoCaoHangHoa?.dsHangHoa} />
+          <Row style={{ fontSize: 18, marginBottom: 30 }}>Biểu đồ thống kê</Row>
+          <ComposedChart
+            width={900}
+            height={500}
+            data={
+              dataPhieuBaoCaoHangHoa?.dsHangHoa?.map((item: any) => {
+                return {
+                  name: item.ten,
+                  uv: item.slban,
+                  pv: parseFloat(item.tongtien.toFixed(2)),
+                };
+              })
+              // data
+            }
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey="name"
+              tickFormatter={(name) => {
+                // Truncate the name if it is too long
+                return name.length > 10 ? `${name.substring(0, 10)}...` : name;
+              }}
+            />
+            <YAxis yAxisId="left" orientation="left" />
+            <YAxis
+              yAxisId="right"
+              orientation="right"
+              domain={[0, "dataMax"]}
+            />
+            <Tooltip />
+            <Legend />
+            <Bar yAxisId="left" dataKey="uv" fill="#82ca9d" name="Số lượng" />
+            <Line
+              yAxisId="right"
+              type="monotone"
+              dataKey="pv"
+              stroke="#ff7300"
+              name="Doanh thu"
+            />
+          </ComposedChart>
         </Modal>
       )}
       {addModal && (
