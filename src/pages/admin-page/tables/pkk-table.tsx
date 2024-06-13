@@ -35,6 +35,12 @@ export const PKKTable: React.FC<Props> = ({
       key: "idNvien",
     },
     {
+      title: "Tổng số lượng tồn",
+      dataIndex: "tongslton",
+      key: "tongslton",
+    },
+
+    {
       title: "Ngày kiểm kê",
       dataIndex: "ngaykiemke",
       key: "ngaykiemke",
@@ -68,11 +74,7 @@ export const PKKTable: React.FC<Props> = ({
   return <Table columns={columns} dataSource={data} />;
 };
 
-export const HHKKAddTable: React.FC<AddProps> = ({
-  data,
-  tableData,
-  setTableData,
-}) => {
+export const HHKKAddTable: React.FC<AddProps> = ({ data }) => {
   const columns: TableProps["columns"] = [
     {
       title: "Mã hàng hóa",
@@ -88,22 +90,6 @@ export const HHKKAddTable: React.FC<AddProps> = ({
       title: "Số lượng tồn",
       dataIndex: "soluongton",
       key: "soluongton",
-    },
-    {
-      title: "Hoạt động",
-      dataIndex: "active",
-      render: (_: any, data: any) => {
-        return (
-          <div>
-            <DeleteOutlined style={{ color: "red" }} onClick={handleDelete} />
-          </div>
-        );
-        function handleDelete() {
-          const index = tableData.findIndex((item: any) => item.id === data.id);
-          tableData.splice(index, 1);
-          setTableData([...tableData]);
-        }
-      },
     },
   ];
   return <Table columns={columns} dataSource={data} />;

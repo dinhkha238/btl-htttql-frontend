@@ -7,7 +7,7 @@ import {
   usePhieuKiemKeHangHoa,
   usePhieuKiemKes,
 } from "../admin.loader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HHKKTable } from "../tables/hhkk-table";
 
 export const PhieuKiemKe = () => {
@@ -25,6 +25,20 @@ export const PhieuKiemKe = () => {
   );
   const { mutate: mutateAdd } = useAddPhieuKiemKe();
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    if (dataHangHoas) {
+      setTableData(
+        dataHangHoas.map((item: any) => {
+          return {
+            id: item.id,
+            ten: item.ten,
+            soluongton: item.soluongton,
+          };
+        })
+      );
+    }
+  }, [dataHangHoas]);
 
   const handleOkAddModal = () => {
     var data = {
@@ -47,24 +61,6 @@ export const PhieuKiemKe = () => {
   const handleChangeKho = (value: string) => {
     setIdSelectedKho(value);
   };
-  const onChangeMatHang = (value: string, data: any) => {
-    console.log(`selected ${value}`);
-    form.setFieldsValue({
-      id: value,
-      ten: data?.label,
-      soluongton: data?.soluongton,
-    });
-  };
-
-  const onSearch = (value: string) => {
-    console.log("search:", value);
-  };
-
-  // Filter `option.label` match the user type `input`
-  const filterOption = (
-    input: string,
-    option?: { label: string; value: string }
-  ) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
   return (
     <div style={{ padding: 20 }}>
@@ -118,6 +114,9 @@ export const PhieuKiemKe = () => {
           </Row>
           <Row>
             <Col span={12}>
+              <Row>Kho: {dataPhieuKiemKeHangHoa?.kho?.ten}</Row>
+            </Col>
+            <Col span={12}>
               <Row>Địa chỉ: {dataPhieuKiemKeHangHoa?.kho?.diachi}</Row>
             </Col>
           </Row>
@@ -141,7 +140,7 @@ export const PhieuKiemKe = () => {
           ]}
         >
           <Row>
-            <Col span={10}>
+            <Col span={24}>
               <Row>Kho</Row>
               <Row>
                 <Col span={24}>
@@ -155,61 +154,13 @@ export const PhieuKiemKe = () => {
                   />
                 </Col>
               </Row>
-              <Row>Mặt hàng</Row>
-              <Row>
-                <Select
-                  showSearch
-                  placeholder="Chọn mặt hàng"
-                  optionFilterProp="children"
-                  onChange={onChangeMatHang}
-                  onSearch={onSearch}
-                  filterOption={filterOption}
-                  options={dataHangHoas?.map((item: any) => {
-                    return {
-                      value: item.id,
-                      label: item.ten,
-                      soluongton: item.soluongton,
-                    };
-                  })}
-                  style={{ width: 350 }}
-                />
-              </Row>
-              <Row>
-                <Form
-                  form={form}
-                  onFinish={(values) => {
-                    tableData.push(values);
-                    setTableData([...tableData]);
-                  }}
-                >
-                  <Form.Item
-                    label="Mã mặt hàng"
-                    name="id"
-                    style={{ marginTop: 20 }}
-                  >
-                    <Input disabled style={{ width: 250 }} />
-                  </Form.Item>
-                  <Form.Item label="Tên mặt hàng" name="ten">
-                    <Input disabled />
-                  </Form.Item>
-                  <Form.Item label="Còn lại" name="soluongton">
-                    <Input disabled />
-                  </Form.Item>
-                  <Form.Item>
-                    <Button type="primary" htmlType="submit">
-                      Thêm
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </Row>
-            </Col>
-            <Col span={14}>
               <HHKKAddTable
                 data={tableData}
                 tableData={tableData}
                 setTableData={setTableData}
               />
             </Col>
+            <Col span={14}></Col>
           </Row>
         </Modal>
       )}

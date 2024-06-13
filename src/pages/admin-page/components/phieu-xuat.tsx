@@ -162,8 +162,13 @@ export const PhieuXuat = () => {
           </Row>
           <Row>
             <Col span={12}>
+              <Row>Kho: {dataPhieuXuatHangHoa?.kho?.ten}</Row>
+            </Col>
+            <Col span={12}>
               <Row>Địa chỉ: {dataPhieuXuatHangHoa?.kho?.diachi}</Row>
             </Col>
+          </Row>
+          <Row>
             <Col span={12}>
               <Row>Tổng tiền: {tongTien}</Row>
             </Col>

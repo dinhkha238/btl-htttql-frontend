@@ -34,12 +34,12 @@ export const PBCTable: React.FC<Props> = ({
       key: "idNvien",
     },
     {
-      title: "Tổng số lượng",
+      title: "Tổng số lượng bán",
       dataIndex: "tongslban",
       key: "tongslban",
     },
     {
-      title: "Tổng tiền",
+      title: "Doanh thu",
       dataIndex: "doanhthu",
       key: "doanhthu",
     },

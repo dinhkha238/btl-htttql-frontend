@@ -150,8 +150,13 @@ export const PhieuBaoCao = () => {
           </Row>
           <Row>
             <Col span={12}>
+              <Row>Kho: {dataPhieuBaoCaoHangHoa?.kho?.ten}</Row>
+            </Col>
+            <Col span={12}>
               <Row>Địa chỉ: {dataPhieuBaoCaoHangHoa?.kho?.diachi}</Row>
             </Col>
+          </Row>
+          <Row>
             <Col span={12}>
               <Row>Tổng tiền: {tongTien}</Row>
             </Col>

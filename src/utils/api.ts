@@ -1,8 +1,11 @@
 import axios from "axios";
 
-export const apiClient =  axios.create({
+export const apiClient = axios.create({
   baseURL: "http://localhost:8080",
   timeout: 20000,
+  headers: {
+    "ngrok-skip-browser-warning": "any",
+  },
 });
 // apiClient.interceptors.request.use(
 //   (config) => {
@@ -22,7 +25,7 @@ export const apiClient =  axios.create({
 //     if (jwtToken) {
 //       localStorage.setItem('jwtToken', jwtToken);
 //     }
-    
+
 //     return response;
 //   },
 //   (error) => {
@@ -30,8 +33,6 @@ export const apiClient =  axios.create({
 //     return Promise.reject(error);
 //   }
 // );
-
-
 
 export const filterEmptyString = (params: Record<string, any>) => {
   const result: Record<string, any> = {};
