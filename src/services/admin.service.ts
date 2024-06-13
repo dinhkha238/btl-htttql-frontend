@@ -94,6 +94,15 @@ export const ocrImage = async (data: any) => {
 };
 
 // put
+export const updatePhieuNhap = async (data: any) => {
+  const result = await apiClient.put(`/phieunhaps/${data.idPn}`, data);
+  return result.data;
+};
+export const updatePhieuXuat = async (data: any) => {
+  const result = await apiClient.put(`/phieuxuats/${data.idPx}`, data);
+  return result.data;
+};
+
 export const updateCustomer = async (data: any) => {
   const result = await apiClient.put(`/api/update-customer/${data._id}`, data);
   return result.data;

@@ -18,6 +18,8 @@ import {
   getPhieuNhaps,
   getPhieuXuatHangHoa,
   getPhieuXuats,
+  updatePhieuNhap,
+  updatePhieuXuat,
 } from "../../services/admin.service";
 import { message } from "antd";
 
@@ -155,6 +157,46 @@ export const useAddPhieuBaoCao = () => {
       },
       onError: () => {
         message.error("Add failed");
+      },
+    }
+  );
+};
+
+export const useUpdatePhieuNhap = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (data: any) => {
+      return updatePhieuNhap(data);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(CACHE_KEYS.InforPhieuNhapHangHoa);
+        queryClient.invalidateQueries(CACHE_KEYS.InforPhieuNhaps);
+
+        message.success("Update success");
+      },
+      onError: () => {
+        message.error("Update failed");
+      },
+    }
+  );
+};
+
+export const useUpdatePhieuXuat = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (data: any) => {
+      return updatePhieuXuat(data);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(CACHE_KEYS.InforPhieuXuatHangHoa);
+        queryClient.invalidateQueries(CACHE_KEYS.InforPhieuXuats);
+
+        message.success("Update success");
+      },
+      onError: () => {
+        message.error("Update failed");
       },
     }
   );

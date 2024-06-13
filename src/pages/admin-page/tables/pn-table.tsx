@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Table, Input, Button } from "antd";
-import { EyeOutlined, DeleteOutlined, SearchOutlined } from "@ant-design/icons";
+import { EyeOutlined, EditOutlined, SearchOutlined } from "@ant-design/icons";
 import type { TableProps, ColumnType } from "antd/es/table";
 import type { InputRef } from "antd";
 
@@ -8,6 +8,7 @@ interface Props {
   data: any;
   setVisible: any;
   setDataSelected: any;
+  setEditModal: any;
 }
 
 interface DataType {
@@ -25,24 +26,22 @@ export const PNTable: React.FC<Props> = ({
   data,
   setVisible,
   setDataSelected,
+  setEditModal,
 }) => {
-  const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef<InputRef>(null);
 
   const handleSearch = (
-    selectedKeys: string[],
+    _: string[],
     confirm: () => void,
     dataIndex: string
   ) => {
     confirm();
-    setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
 
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
-    setSearchText("");
   };
 
   const getColumnSearchProps = (
@@ -53,7 +52,6 @@ export const PNTable: React.FC<Props> = ({
       selectedKeys,
       confirm,
       clearFilters,
-      close,
     }) => (
       <div style={{ padding: 8 }}>
         <Input
@@ -156,14 +154,19 @@ export const PNTable: React.FC<Props> = ({
               style={{ paddingRight: 8, color: "blue" }}
               onClick={() => handleDetail(record)}
             />
+            <EditOutlined
+              style={{ paddingRight: 8, color: "green" }}
+              onClick={() => handleEdit(record)}
+            ></EditOutlined>
           </div>
         );
         function handleDetail(data: DataType) {
           setVisible(true);
           setDataSelected(data);
         }
-        function handleDelete(data: DataType) {
-          // Implement delete functionality here
+        function handleEdit(data: DataType) {
+          setEditModal(true);
+          setDataSelected(data);
         }
       },
     },

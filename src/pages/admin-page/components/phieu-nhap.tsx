@@ -17,17 +17,21 @@ import {
   useNhaCungCaps,
   usePhieuNhapHangHoa,
   usePhieuNhaps,
+  useUpdatePhieuNhap,
 } from "../admin.loader";
 import { useEffect, useState } from "react";
 import { HHTable } from "../tables/hh-table";
-import { HHTableAdd } from "../tables/hh-table-add";
+import { HHTableAdd, HHTableEdit } from "../tables/hh-table-add";
 
 export const PhieuNhap = () => {
   const [visible, setVisible] = useState(false);
   const [dataSelected, setDataSelected] = useState<any>({});
   const [tongTien, setTongTien] = useState(0);
+  const [tongTienEdit, setTongTienEdit] = useState(0);
   const [addModal, setAddModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
   const [tableData, setTableData] = useState<any[]>([]);
+  const [tableDataEdit, setTableDataEdit] = useState<any[]>([]);
   const [idSelectedNcc, setIdSelectedNcc] = useState<any>();
   const [idSelectedKho, setIdSelectedKho] = useState<any>();
   const [tongTienMatHang, setTongTienMatHang] = useState(0);
@@ -36,10 +40,11 @@ export const PhieuNhap = () => {
   const { data: dataNhaCungCaps } = useNhaCungCaps();
   const { data: dataHangHoas } = useHangHoaByIdNcc(idSelectedNcc);
   const { data: dataPhieuNhaps } = usePhieuNhaps();
-  const { data: dataPhieuNhapHangHoa } = usePhieuNhapHangHoa(
+  const { data: dataPhieuNhapHangHoa, isLoading } = usePhieuNhapHangHoa(
     dataSelected?.id || 1
   );
   const { mutate: mutateAdd } = useAddPhieuNhap();
+  const { mutate: mutateEdit } = useUpdatePhieuNhap();
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -49,8 +54,10 @@ export const PhieuNhap = () => {
         tong += item.dongia * item.soluong;
       });
       setTongTien(tong);
+      setTongTienEdit(tong);
     }
   }, [dataPhieuNhapHangHoa]);
+
   useEffect(() => {
     let tong = 0;
     tableData.forEach((item) => {
@@ -58,6 +65,14 @@ export const PhieuNhap = () => {
     });
     setTongTienMatHang(tong);
   }, [tableData]);
+
+  useEffect(() => {
+    let tong = 0;
+    tableDataEdit?.forEach((item) => {
+      tong += item.dongia * item.soluong;
+    });
+    setTongTienEdit(tong);
+  }, [tableDataEdit]);
 
   const handleOkAddModal = () => {
     var data = {
@@ -78,6 +93,12 @@ export const PhieuNhap = () => {
   };
   const handleCancelAddModal = () => {
     setAddModal(false);
+  };
+  const handleOkEditModal = () => {
+    setEditModal(false);
+  };
+  const handleCancelEditModal = () => {
+    setEditModal(false);
   };
   const handleChangeKho = (value: string) => {
     setIdSelectedKho(value);
@@ -125,7 +146,9 @@ export const PhieuNhap = () => {
         data={dataPhieuNhaps}
         setVisible={setVisible}
         setDataSelected={setDataSelected}
+        setEditModal={setEditModal}
       />
+
       {visible && (
         <Modal
           title={"Thông tin phiếu nhập"}
@@ -293,6 +316,31 @@ export const PhieuNhap = () => {
                 setTableData={setTableData}
               />
               <Row>Tổng tiền mặt hàng: {tongTienMatHang}</Row>
+            </Col>
+          </Row>
+        </Modal>
+      )}
+      {editModal && (
+        <Modal
+          title={"Sửa phiếu nhập"}
+          visible={editModal}
+          onCancel={handleCancelEditModal}
+          onOk={handleOkEditModal}
+          width={1000}
+          footer={false}
+        >
+          <Row>
+            <Col span={24}>
+              {!isLoading && (
+                <HHTableEdit
+                  data={dataPhieuNhapHangHoa?.dsHangHoa}
+                  setTableDataEdit={setTableDataEdit}
+                  dataSelected={dataSelected}
+                  mutateEdit={mutateEdit}
+                  type="pn"
+                />
+              )}
+              <Row>Tổng tiền mặt hàng: {tongTienEdit}</Row>
             </Col>
           </Row>
         </Modal>
