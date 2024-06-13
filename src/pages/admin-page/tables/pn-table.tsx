@@ -156,10 +156,6 @@ export const PNTable: React.FC<Props> = ({
               style={{ paddingRight: 8, color: "blue" }}
               onClick={() => handleDetail(record)}
             />
-            <DeleteOutlined
-              style={{ color: "red" }}
-              onClick={() => handleDelete(record)}
-            />
           </div>
         );
         function handleDetail(data: DataType) {
